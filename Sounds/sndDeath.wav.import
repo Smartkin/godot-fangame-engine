@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/sndDeath.wav-944001adadc7c93e3f8ee5c025169fb8.sample"
+
+[deps]
+
+source_file="res://Sounds/sndDeath.wav"
+dest_files=[ "res://.import/sndDeath.wav-944001adadc7c93e3f8ee5c025169fb8.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
