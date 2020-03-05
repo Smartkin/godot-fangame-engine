@@ -1,15 +1,17 @@
 extends KinematicBody2D
 
 const UP = Vector2(0, -1)
-const SLOPE_SNAP = Vector2(0, -10)
-const DEBUG_OUTPUT_RATE = 60
+const GROUND_SNAP = Vector2.DOWN * 5
+const DEBUG_OUTPUT_RATE = 2
 const MAX_COYOTE = 2
 const MAX_JUMP_BUFFER = 2
 
 var speed = Vector2(0, 0)
+var snap = GROUND_SNAP
 var canJump = true
 var canDjump = true
 var runSpeed = 200
+var fallSpeed = 600
 var jumpHeight = -450
 var djumpHeight = -350
 var gravity = 20
@@ -22,27 +24,29 @@ func _ready():
 
 func _physics_process(_delta):
 	debugOutputTimer += 1
-	handleInputs()
-	applyGravity()
 	if (is_on_floor()):
 		canJump = true
 		canDjump = true
 		coyoteFrames = MAX_COYOTE
+		snap = GROUND_SNAP
 	else:
+		applyGravity()
 		coyoteFrames -= 1
 		if (coyoteFrames <= 0):
 			canJump = false
-	speed = move_and_slide_with_snap(speed, SLOPE_SNAP, UP, false, 4, 0.785398, false)
+	handleInputs()
+	speed = move_and_slide_with_snap(speed, snap, UP, false, 4, 0.785398, false)
 	if (speed.x == 0 && speed.y == 0):
 		$Sprite.play("Idle")
 	if (speed.y > 0):
 		$Sprite.play("Fall")
 	# Debug output
-	if (debugOutputTimer >= DEBUG_OUTPUT_RATE):
-		debugOutputTimer = 0
-		print("Is on floor: " + String(is_on_floor()))
-		print("Is on ceiling: " + String(is_on_ceiling()))
-		print("Is touching wall: " + String(is_on_wall()))
+#	if (debugOutputTimer >= DEBUG_OUTPUT_RATE):
+#		debugOutputTimer = 0
+#		print("Speed: " + String(speed))
+#		print("Is on floor: " + String(is_on_floor()))
+#		print("Is on ceiling: " + String(is_on_ceiling()))
+#		print("Is touching wall: " + String(is_on_wall()))
 
 # Player jumping logic
 func jump(inputBuffer):
@@ -59,6 +63,7 @@ func jump(inputBuffer):
 		$Sounds/sndDjump.play()
 	if (jumped):
 		$Sprite.play("Jump")
+		snap = Vector2.ZERO
 		return 0 # Indicate that the jump buffer input was consumed
 	return inputBuffer - 1
 
@@ -67,6 +72,9 @@ func cutJump():
 
 func applyGravity():
 	speed.y += gravity
+	# Cap fall speed
+	if (speed.y >= fallSpeed):
+		speed.y = fallSpeed
 
 # Player running logic
 func run(direction = 0):
@@ -95,6 +103,12 @@ func handleInputs():
 	# Handle player shooting
 	if (Input.is_action_just_pressed("pl_shoot")):
 		shoot()
+	debugInputs()
+
+func debugInputs():
+	if (Input.is_key_pressed(ord("W"))):
+		print("Teleported player")
+		position = get_global_mouse_position()
 
 func shoot():
 	$Sounds/sndShoot.play()
