@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Objects/Player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Sounds/sndDeath.wav" type="AudioStream" id=2]
+[ext_resource path="res://Sounds/sndJump.wav" type="AudioStream" id=3]
+[ext_resource path="res://Sounds/sndDJump.wav" type="AudioStream" id=4]
+[ext_resource path="res://Sounds/sndShoot.wav" type="AudioStream" id=5]
+[ext_resource path="res://Sprites/sprGameOver_0.png" type="Texture" id=6]
+[ext_resource path="res://Scripts/Player/PlayerController.gd" type="Script" id=7]
+
+[node name="PlayerController" type="Node2D"]
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+
+[node name="Sounds" type="Node" parent="."]
+
+[node name="Death" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 2 )
+
+[node name="Jump" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 3 )
+
+[node name="Djump" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 4 )
+
+[node name="Shoot" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 5 )
+
+[node name="GameOver" type="Sprite" parent="."]
+visible = false
+position = Vector2( 644, 341 )
+texture = ExtResource( 6 )
+[connection signal="dead" from="Player" to="." method="_on_Player_dead"]
+[connection signal="shoot" from="Player" to="." method="_on_Player_shoot"]
+[connection signal="sound" from="Player" to="." method="_on_Player_sound"]

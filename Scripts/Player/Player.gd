@@ -1,5 +1,9 @@
 extends KinematicBody2D
 
+signal dead
+signal shoot
+signal sound
+
 const UP = Vector2(0, -1)
 const GROUND_SNAP = Vector2.DOWN * 5
 const DEBUG_OUTPUT_RATE = 2
@@ -12,14 +16,16 @@ var canJump = true
 var canDjump = true
 var setRunSprite = false
 var grabbable = null
-var runSpeed = 200
-var fallSpeed = 600
+var runSpeed = 190
+var fallSpeed = 420
 var jumpHeight = -450
 var djumpHeight = -350
 var gravity = 20
 var coyoteFrames = 0
 var jumpBuffer = 0
 var debugOutputTimer = 0
+onready var pivotDistance = abs($Pivot.position.x - $CollisionShape2D.position.x)
+onready var collisionStartPos = $CollisionShape2D.position
 
 func _ready():
 	$Sprite.play("Idle") # Set default sprite animation to idle
@@ -38,6 +44,8 @@ func _physics_process(_delta):
 			canJump = false
 	handleInputs()
 	speed = move_and_slide_with_snap(speed, snap, UP, false, 4, 0.785398, false)
+	for i in range(get_slide_count()):
+		handleCollision(get_slide_collision(i))
 	if (speed.x == 0 && speed.y == 0 && !setRunSprite):
 		$Sprite.play("Idle")
 	if (speed.y > 0):
@@ -57,25 +65,17 @@ func jump(inputBuffer):
 	if (canJump || grabbable != null):
 		# Jumping in the platform
 		if (grabbable != null):
-			# If desired snapping behavior can be obtained by using the obtained collision information
-			var distToPlatform = abs(position.y + 16 - grabbable.position.y)
-			var collision = move_and_collide(Vector2(0, -distToPlatform), true, true, true)
 			canDjump = true
-			if (collision != null):
-				speed.y = 0
-				position.y += collision.travel.y
-			else:
-				speed.y = jumpHeight
 		else:
-			speed.y = jumpHeight
 			canJump = false
+		speed.y = jumpHeight
 		jumped = true
-		$Sounds/sndJump.play()
+		emit_signal("sound", "Jump")
 	elif (canDjump):
 		speed.y = djumpHeight
 		canDjump = false
 		jumped = true
-		$Sounds/sndDjump.play()
+		emit_signal("sound", "Djump")
 	if (jumped):
 		$Sprite.play("Jump")
 		snap = Vector2.ZERO
@@ -99,6 +99,8 @@ func run(direction = 0):
 			setRunSprite = true
 			$Sprite.play("Run")
 		$Sprite.flip_h = (direction == -1)
+		$CollisionShape2D.position.x = collisionStartPos.x - 2 * pivotDistance if (direction == -1) else collisionStartPos.x
+
 
 func handleInputs():
 	# Handle player jump
@@ -107,7 +109,7 @@ func handleInputs():
 	if (jumpBuffer > 0):
 		jumpBuffer = jump(jumpBuffer)
 	# Handle player jump release
-	if (Input.is_action_just_released("pl_jump")):
+	if (Input.is_action_just_released("pl_jump") && speed.y < 0):
 		cutJump()
 	# Handle player run
 	if (Input.is_action_pressed("pl_left")):
@@ -121,10 +123,18 @@ func handleInputs():
 		shoot()
 	debugInputs()
 
+
+func handleCollision(collision):
+	if (collision.collider.is_in_group("Killers")):
+		kill()
+
 func debugInputs():
-	if (Input.is_key_pressed(ord("W"))):
-		print("Teleported player")
-		position = get_global_mouse_position()
+	if (Input.is_key_pressed(ord("W"))): # Warp player to mouse
+		global_position = get_global_mouse_position()
 
 func shoot():
-	$Sounds/sndShoot.play()
+	emit_signal("shoot")
+
+func kill():
+	emit_signal("dead", position)
+	queue_free()
