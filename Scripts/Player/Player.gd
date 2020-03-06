@@ -10,6 +10,8 @@ var speed = Vector2(0, 0)
 var snap = GROUND_SNAP
 var canJump = true
 var canDjump = true
+var setRunSprite = false
+var grabbable = null
 var runSpeed = 200
 var fallSpeed = 600
 var jumpHeight = -450
@@ -36,10 +38,11 @@ func _physics_process(_delta):
 			canJump = false
 	handleInputs()
 	speed = move_and_slide_with_snap(speed, snap, UP, false, 4, 0.785398, false)
-	if (speed.x == 0 && speed.y == 0):
+	if (speed.x == 0 && speed.y == 0 && !setRunSprite):
 		$Sprite.play("Idle")
 	if (speed.y > 0):
 		$Sprite.play("Fall")
+	setRunSprite = false
 	# Debug output
 #	if (debugOutputTimer >= DEBUG_OUTPUT_RATE):
 #		debugOutputTimer = 0
@@ -51,9 +54,21 @@ func _physics_process(_delta):
 # Player jumping logic
 func jump(inputBuffer):
 	var jumped = false
-	if (canJump):
-		speed.y = jumpHeight
-		canJump = false
+	if (canJump || grabbable != null):
+		# Jumping in the platform
+		if (grabbable != null):
+			# If desired snapping behavior can be obtained by using the obtained collision information
+			var distToPlatform = abs(position.y + 16 - grabbable.position.y)
+			var collision = move_and_collide(Vector2(0, -distToPlatform), true, true, true)
+			canDjump = true
+			if (collision != null):
+				speed.y = 0
+				position.y += collision.travel.y
+			else:
+				speed.y = jumpHeight
+		else:
+			speed.y = jumpHeight
+			canJump = false
 		jumped = true
 		$Sounds/sndJump.play()
 	elif (canDjump):
@@ -81,6 +96,7 @@ func run(direction = 0):
 	speed.x = runSpeed * direction
 	if (direction != 0):
 		if (speed.y == 0):
+			setRunSprite = true
 			$Sprite.play("Run")
 		$Sprite.flip_h = (direction == -1)
 
