@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/sprWalljumpL_0.png-e7dbc1f036554246461b96204885ff33.stex"
+path="res://.import/341.png-2e51b64ae6be90e7eb8159bfe50cab5c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/sprWalljumpL_0.png"
-dest_files=[ "res://.import/sprWalljumpL_0.png-e7dbc1f036554246461b96204885ff33.stex" ]
+source_file="res://Sprites/Gimmicks/341.png"
+dest_files=[ "res://.import/341.png-2e51b64ae6be90e7eb8159bfe50cab5c.stex" ]
 
 [params]
 

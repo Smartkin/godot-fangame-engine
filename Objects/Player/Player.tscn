@@ -7,94 +7,94 @@
 [ext_resource path="res://Sprites/Player/sprPlayerRunning_strip4.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Player/sprPlayerSliding_strip2.png" type="Texture" id=6]
 
-[sub_resource type="AtlasTexture" id=16]
+[sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 6 )
 region = Rect2( 32, 0, 32, 20 )
 
-[sub_resource type="AtlasTexture" id=17]
+[sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 6 )
 region = Rect2( 0, 0, 32, 20 )
 
-[sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 5 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 5 )
-region = Rect2( 32, 0, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 5 )
-region = Rect2( 64, 0, 32, 32 )
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 5 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 3 )
+atlas = ExtResource( 1 )
 region = Rect2( 32, 0, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 1 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 32, 32 )
+
 [sub_resource type="AtlasTexture" id=7]
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=8]
-atlas = ExtResource( 4 )
+atlas = ExtResource( 5 )
 region = Rect2( 32, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=9]
-atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=10]
-atlas = ExtResource( 1 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=11]
-atlas = ExtResource( 1 )
+atlas = ExtResource( 5 )
 region = Rect2( 64, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=12]
-atlas = ExtResource( 1 )
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 5 )
 region = Rect2( 96, 0, 32, 32 )
 
-[sub_resource type="SpriteFrames" id=13]
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 3 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=14]
+atlas = ExtResource( 4 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=15]
 animations = [ {
-"frames": [ SubResource( 16 ), SubResource( 17 ) ],
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
 "loop": true,
 "name": "VineSlide",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ],
+"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 10.0
+}, {
+"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
 "loop": true,
 "name": "Run",
 "speed": 15.0
 }, {
-"frames": [ SubResource( 5 ), SubResource( 6 ) ],
+"frames": [ SubResource( 11 ), SubResource( 12 ) ],
 "loop": true,
 "name": "Jump",
 "speed": 10.0
 }, {
-"frames": [ SubResource( 7 ), SubResource( 8 ) ],
+"frames": [ SubResource( 13 ), SubResource( 14 ) ],
 "loop": true,
 "name": "Fall",
 "speed": 10.0
-}, {
-"frames": [ SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ) ],
-"loop": true,
-"name": "Idle",
-"speed": 10.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=14]
+[sub_resource type="RectangleShape2D" id=16]
 extents = Vector2( 5.5, 10 )
 
-[sub_resource type="RectangleShape2D" id=15]
+[sub_resource type="RectangleShape2D" id=17]
 extents = Vector2( 1, 10 )
 
 [node name="Player" type="KinematicBody2D" groups=[
@@ -104,12 +104,12 @@ collision_mask = 4
 script = ExtResource( 2 )
 
 [node name="Sprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 13 )
+frames = SubResource( 15 )
 animation = "Idle"
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2( 1.5, 6 )
-shape = SubResource( 14 )
+shape = SubResource( 16 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
@@ -129,6 +129,6 @@ collision_mask = 16
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GrabHitbox"]
 visible = false
 position = Vector2( 8, 6 )
-shape = SubResource( 15 )
+shape = SubResource( 17 )
 [connection signal="body_entered" from="GrabHitbox" to="." method="_on_Grab_body_entered"]
 [connection signal="body_exited" from="GrabHitbox" to="." method="_on_Grab_body_exited"]

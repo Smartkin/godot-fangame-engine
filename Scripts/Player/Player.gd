@@ -4,16 +4,11 @@ signal dead
 signal shoot
 signal sound
 
-const UP := Vector2.UP
-const GROUND_SNAP := Vector2.DOWN * 5
-const DEBUG_OUTPUT_RATE := 60
-const MAX_COYOTE := 2
-const MAX_JUMP_BUFFER := 2
-
 enum STATE {
 	RUN,
 	GRAB,
-	CUTSCENE
+	CUTSCENE,
+	DEAD
 }
 
 enum DIRECTION {
@@ -22,11 +17,20 @@ enum DIRECTION {
 	RIGHT = 1
 }
 
+const UP := Vector2.UP
+const DOWN := Vector2.DOWN
+const GROUND_SNAP := Vector2.DOWN * 5
+const REVERSE_SNAP := Vector2.UP * 5
+const DEBUG_OUTPUT_RATE := 60
+const MAX_COYOTE := 2
+const MAX_JUMP_BUFFER := 2
+
 var speed := Vector2.ZERO
 var snap := GROUND_SNAP
 var canJump := true
 var canDjump := true
 var setRunSprite := false
+var reverseGrav := false
 var platform: Node2D = null
 var grabbables: Array = []
 var runSpeed := 190
@@ -41,23 +45,24 @@ var curState: int = STATE.RUN
 var statesStack: Array = [STATE.RUN]
 var vineSlideOffset := Vector2(9, 6)
 
-onready var collisionPivotDistance := abs($Pivot.position.x - $Hitbox.position.x)
+onready var collisionPivotDistance := Vector2(abs($Pivot.position.x - $Hitbox.position.x), abs($Pivot.position.y - $Hitbox.position.y))
 onready var collisionStartPos: Vector2 = $Hitbox.position
 
-onready var grabPivotDistance := abs($Pivot.position.x - $GrabHitbox/CollisionShape2D.position.x)
+onready var grabPivotDistance := Vector2(abs($Pivot.position.x - $GrabHitbox/CollisionShape2D.position.x), abs($Pivot.position.y - $GrabHitbox/CollisionShape2D.position.y))
 onready var grabStartPos: Vector2 = $GrabHitbox/CollisionShape2D.position
 
 func _ready() -> void:
 	$Sprite.play("Idle") # Set default sprite animation to idle
 
 func _physics_process(delta: float) -> void:
+	var up := UP if !reverseGrav else DOWN
 	if (is_on_floor()):
 		if (curState == STATE.GRAB):
 			revertState("resetSprite")
 		canJump = true
 		canDjump = true
 		coyoteFrames = MAX_COYOTE
-		snap = GROUND_SNAP
+		snap = GROUND_SNAP if !reverseGrav else REVERSE_SNAP
 	else:
 		if (curState != STATE.GRAB):
 			applyGravity()
@@ -65,7 +70,7 @@ func _physics_process(delta: float) -> void:
 		if (coyoteFrames <= 0):
 			canJump = false
 	handleInputs()
-	speed = move_and_slide_with_snap(speed, snap, UP)
+	speed = move_and_slide_with_snap(speed, snap, up)
 	for i in range(get_slide_count()):
 		handleCollision(get_slide_collision(i))
 	match curState:
@@ -107,7 +112,7 @@ func jump(inputBuffer: int) -> int:
 				hitboxDirection = DIRECTION.LEFT
 			revertState("resetSprite")
 			emit_signal("sound", "Jump")
-			mirrorHitbox(hitboxDirection)
+			mirrorHitboxHor(hitboxDirection)
 			speed = Vector2(3 * runSpeed * hitboxDirection, jumpHeight)
 			jumped = true
 	if (jumped):
@@ -137,37 +142,72 @@ func run(direction: int = 0) -> void:
 			setRunSprite = true
 			$Sprite.play("Run")
 		$Sprite.flip_h = (direction == DIRECTION.LEFT)
-		mirrorHitbox(direction)
+		mirrorHitboxHor(direction)
 
 # Mirrors a given point against another one
 func mirrorAgainstPivot(direction: int, origin: float, distance: float) -> float:
 	return origin - 2 * distance if (direction == DIRECTION.LEFT) else origin
 
 # Mirrors player's hitbox around X axis against a central pivot point
-func mirrorHitbox(direction: int) -> void:
-	$Hitbox.position.x = mirrorAgainstPivot(direction, collisionStartPos.x, collisionPivotDistance)
-	$GrabHitbox/CollisionShape2D.position.x = mirrorAgainstPivot(direction, grabStartPos.x, grabPivotDistance)
+func mirrorHitboxHor(direction: int) -> void:
+	$Hitbox.position.x = mirrorAgainstPivot(direction, collisionStartPos.x, collisionPivotDistance.x)
+	$GrabHitbox/CollisionShape2D.position.x = mirrorAgainstPivot(direction, grabStartPos.x, grabPivotDistance.x)
+
+# Mirrors player's hitbox around Y axis against a central pivot point
+func mirrorHitboxVer(direction: int) -> void:
+	$Hitbox.position.y = mirrorAgainstPivot(direction, collisionStartPos.y, collisionPivotDistance.y)
+	$GrabHitbox/CollisionShape2D.position.y = mirrorAgainstPivot(direction, grabStartPos.y, grabPivotDistance.y)
 
 # Vine sliding logic
-func slideOnGrab(direction: int = 0) -> void:
+func slideOnGrab(direction: int = 0) -> String:
+	var neededAction = ""
 	var priorityGrabbed: GrabbableBase = grabbables.back()
 	var type = priorityGrabbed.type
 	var slideSpeed = priorityGrabbed.slideSpeed
 	match type:
 		GrabbableBase.TYPE.LEFT:
 			$Sprite.play("VineSlide")
-			$Sprite.position = vineSlideOffset
+			$Sprite.position = Vector2(vineSlideOffset.x, vineSlideOffset.y if !reverseGrav else -vineSlideOffset.y)
 			$Sprite.flip_h = false
-			speed.y = slideSpeed
+			speed.y = slideSpeed if !reverseGrav else -slideSpeed
+			neededAction = "pl_right"
 		GrabbableBase.TYPE.RIGHT:
 			$Sprite.play("VineSlide")
-			$Sprite.position = Vector2(-vineSlideOffset.x, vineSlideOffset.y)
+			$Sprite.position = Vector2(-vineSlideOffset.x, vineSlideOffset.y if !reverseGrav else -vineSlideOffset.y)
 			$Sprite.flip_h = true
-			speed.y = slideSpeed
+			speed.y = slideSpeed if !reverseGrav else -slideSpeed
+			neededAction = "pl_left"
+	return neededAction
+
+# Reverse player's gravity
+func reverseGravity() -> void:
+	if (!reverseGrav):
+		reverseGrav = true
+		gravity = -absi(gravity)
+		jumpHeight = absi(jumpHeight)
+		djumpHeight = absi(djumpHeight)
+		speed.y = 0
+		$Sprite.flip_v = true
+		mirrorHitboxVer(DIRECTION.LEFT)
+
+func normalGravity() -> void:
+	if (reverseGrav):
+		reverseGrav = false
+		gravity = absi(gravity)
+		jumpHeight = -absi(jumpHeight)
+		djumpHeight = -absi(djumpHeight)
+		speed.y = 0
+		$Sprite.flip_v = false
+		mirrorHitboxVer(DIRECTION.RIGHT)
+
+# Integer abs
+func absi(a: int) -> int:
+	return abs(a as float) as int
 
 func handleInputs() -> void:
 	# Handle player run
 	var direction: int = DIRECTION.IDLE
+	var action := "pl_right"
 	if (Input.is_action_pressed("pl_right")):
 		direction = DIRECTION.RIGHT
 	elif (Input.is_action_pressed("pl_left")):
@@ -177,9 +217,11 @@ func handleInputs() -> void:
 		STATE.RUN:
 			run(direction)
 		STATE.GRAB:
-			slideOnGrab(direction)
+			run(direction)
+			action = slideOnGrab(direction)
 	# Handle player jump
-	if (Input.is_action_just_pressed("pl_jump")):
+	var jumpFromVine: bool = (Input.is_action_pressed("pl_jump") && Input.is_action_just_pressed(action) && curState == STATE.GRAB)
+	if (Input.is_action_just_pressed("pl_jump") || jumpFromVine):
 		jumpBuffer = MAX_JUMP_BUFFER
 	if (jumpBuffer > 0):
 		jumpBuffer = jump(jumpBuffer)
@@ -213,7 +255,9 @@ func shoot() -> void:
 	emit_signal("shoot")
 
 func kill() -> void:
-	emit_signal("dead", position)
+	if (curState != STATE.DEAD): # To prevent emitting this twice
+		emit_signal("dead", global_position)
+		switchState(STATE.DEAD)
 	queue_free()
 
 # Puts player in a new state
@@ -239,9 +283,9 @@ func resetSprite() -> void:
 
 func _on_Grab_body_entered(body: GrabbableBase) -> void:
 	print("Touched grabbable surface")
+	grabbables.push_back(body)
 	if (!is_on_floor() && curState != STATE.CUTSCENE):
 		switchState(STATE.GRAB)
-		grabbables.push_back(body)
 
 func _on_Grab_body_exited(body: GrabbableBase) -> void:
 	print("Left grabbable surface")

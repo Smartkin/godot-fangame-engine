@@ -516,7 +516,6 @@ gdscript/warnings/return_value_discarded=false
 
 window/size/width=1280
 window/size/height=720
-window/vsync/use_vsync=false
 
 [global]
 
@@ -557,10 +556,6 @@ pl_reset={
 2d_physics/layer_3="Block"
 2d_physics/layer_4="Killers"
 2d_physics/layer_5="Grabbables"
-
-[physics]
-
-2d/thread_model=2
 
 [rendering]
 

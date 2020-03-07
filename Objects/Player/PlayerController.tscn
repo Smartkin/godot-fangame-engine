@@ -1,14 +1,49 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Objects/Player/Player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Sounds/sndDeath.wav" type="AudioStream" id=2]
-[ext_resource path="res://Sounds/sndJump.wav" type="AudioStream" id=3]
-[ext_resource path="res://Sounds/sndDJump.wav" type="AudioStream" id=4]
-[ext_resource path="res://Sounds/sndShoot.wav" type="AudioStream" id=5]
+[ext_resource path="res://Sounds/Player/sndDeath.wav" type="AudioStream" id=2]
+[ext_resource path="res://Sounds/Player/sndJump.wav" type="AudioStream" id=3]
+[ext_resource path="res://Sounds/Player/sndDJump.wav" type="AudioStream" id=4]
+[ext_resource path="res://Sounds/Player/sndShoot.wav" type="AudioStream" id=5]
 [ext_resource path="res://Sprites/sprGameOver_0.png" type="Texture" id=6]
 [ext_resource path="res://Scripts/Player/PlayerController.gd" type="Script" id=7]
 
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=2]
+curve = SubResource( 1 )
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 1 )
+colors = PoolColorArray( 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=7]
+trail_divisor = 10
+trail_size_modifier = SubResource( 6 )
+trail_color_modifier = SubResource( 4 )
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 50, 0 )
+initial_velocity = 50.0
+initial_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 3.0
+scale_curve = SubResource( 2 )
+color = Color( 1, 0, 0, 1 )
+
 [node name="PlayerController" type="Node2D"]
+z_index = 120
 script = ExtResource( 7 )
 __meta__ = {
 "_edit_group_": true
@@ -33,7 +68,18 @@ stream = ExtResource( 5 )
 [node name="GameOver" type="Sprite" parent="."]
 visible = false
 position = Vector2( 644, 341 )
+z_index = 4096
 texture = ExtResource( 6 )
+
+[node name="Blood" type="Particles2D" parent="."]
+emitting = false
+amount = 500
+lifetime = 2.0
+process_material = SubResource( 7 )
+
+[node name="BloodTimer" type="Timer" parent="."]
+one_shot = true
 [connection signal="dead" from="Player" to="." method="_on_Player_dead"]
 [connection signal="shoot" from="Player" to="." method="_on_Player_shoot"]
 [connection signal="sound" from="Player" to="." method="_on_Player_sound"]
+[connection signal="timeout" from="BloodTimer" to="." method="_on_BloodTimer_timeout"]

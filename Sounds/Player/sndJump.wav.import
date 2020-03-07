@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/sndDJump.wav-47596d67cd7e24329511ddc8cff6a694.sample"
+path="res://.import/sndJump.wav-d81bf65c1efa71187c06f753acbbbdc2.sample"
 
 [deps]
 
-source_file="res://Sounds/sndDJump.wav"
-dest_files=[ "res://.import/sndDJump.wav-47596d67cd7e24329511ddc8cff6a694.sample" ]
+source_file="res://Sounds/Player/sndJump.wav"
+dest_files=[ "res://.import/sndJump.wav-d81bf65c1efa71187c06f753acbbbdc2.sample" ]
 
 [params]
 

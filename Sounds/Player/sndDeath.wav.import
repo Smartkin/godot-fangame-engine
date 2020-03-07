@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/sndJump.wav-6ed9ee9221c1373478c788cb86b342ba.sample"
+path="res://.import/sndDeath.wav-0efdd180e5631691a5ee0d620f30ceac.sample"
 
 [deps]
 
-source_file="res://Sounds/sndJump.wav"
-dest_files=[ "res://.import/sndJump.wav-6ed9ee9221c1373478c788cb86b342ba.sample" ]
+source_file="res://Sounds/Player/sndDeath.wav"
+dest_files=[ "res://.import/sndDeath.wav-0efdd180e5631691a5ee0d620f30ceac.sample" ]
 
 [params]
 

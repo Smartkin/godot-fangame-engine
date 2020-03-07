@@ -26,7 +26,6 @@ func handle_collision(collider: Node2D, normal: Vector2) -> void:
 		speed = speed.bounce(normal)
 		if (printDebug):
 			print("Bounce normal: " + String(normal))
-			print("New speed: " + String(speed))
 		($CollisionChecker as KinematicBody2D).speed = speed
 
 func on_block_collision(collisions: Array) -> void:

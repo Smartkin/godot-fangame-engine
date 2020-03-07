@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/sprWalljumpR_0.png-df10c63698ffb79174f9b40722114919.stex"
+path="res://.import/sprGravityDown_0.png-0b1b239807e26f2974d3b55fe3ba3819.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/sprWalljumpR_0.png"
-dest_files=[ "res://.import/sprWalljumpR_0.png-df10c63698ffb79174f9b40722114919.stex" ]
+source_file="res://Sprites/Gimmicks/sprGravityDown_0.png"
+dest_files=[ "res://.import/sprGravityDown_0.png-0b1b239807e26f2974d3b55fe3ba3819.stex" ]
 
 [params]
 

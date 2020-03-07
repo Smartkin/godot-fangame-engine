@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/sndDeath.wav-944001adadc7c93e3f8ee5c025169fb8.sample"
+path="res://.import/sndShoot.wav-2d0991605fb2321f144ccadd743b4d90.sample"
 
 [deps]
 
-source_file="res://Sounds/sndDeath.wav"
-dest_files=[ "res://.import/sndDeath.wav-944001adadc7c93e3f8ee5c025169fb8.sample" ]
+source_file="res://Sounds/Player/sndShoot.wav"
+dest_files=[ "res://.import/sndShoot.wav-2d0991605fb2321f144ccadd743b4d90.sample" ]
 
 [params]
 
