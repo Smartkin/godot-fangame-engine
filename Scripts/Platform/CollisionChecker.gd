@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const UP = Vector2.DOWN
+const UP := Vector2.DOWN
 
 signal block_collision
 
@@ -9,12 +9,13 @@ var toMove: Node2D = null
 
 func _physics_process(delta: float) -> void:
 	set_sync_to_physics(false)
-	speed = move_and_slide(speed, UP, true)
+	speed = move_and_slide(speed, UP, true, 1)
 	set_sync_to_physics(true)
 	position -= speed * delta
 	if (toMove != null):
 		toMove.position += speed * delta
 		position += speed * delta
+	# Array of KinematicCollision2D
 	var collisions := []
 	for i in range(get_slide_count()):
 		collisions.append(get_slide_collision(i))

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Objects/Block.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Objects/Player/PlayerController.tscn" type="PackedScene" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://Objects/Hazards/SpikeUp.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Objects/Hazards/SpikeDown.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Objects/Hazards/SpikeLeft.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Objects/WallJumpL.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Objects/WalljumpR.tscn" type="PackedScene" id=9]
 
 [node name="TestBed" type="Node2D"]
 __meta__ = {
@@ -25,12 +27,17 @@ startSpeed = Vector2( 100, 0 )
 position = Vector2( 656, 32 )
 bounce = false
 
+[node name="Platform6" parent="." instance=ExtResource( 3 )]
+position = Vector2( 672, 624 )
+bounce = false
+
 [node name="Platform3" parent="." instance=ExtResource( 3 )]
 position = Vector2( 848, 192 )
-startSpeed = Vector2( 50, 50 )
+startSpeed = Vector2( 800, 350 )
+printDebug = true
 
 [node name="PlayerController" parent="." instance=ExtResource( 2 )]
-position = Vector2( 560, 672 )
+position = Vector2( 80, 672 )
 
 [node name="Blocks" type="Node2D" parent="."]
 position = Vector2( 32, 32 )
@@ -685,3 +692,24 @@ position = Vector2( 704, 656 )
 
 [node name="SpikeDown4" parent="Killers" instance=ExtResource( 6 )]
 position = Vector2( 544, 624 )
+
+[node name="Grabbables" type="Node2D" parent="."]
+position = Vector2( -16, 0 )
+
+[node name="WallJumpL" parent="Grabbables" instance=ExtResource( 8 )]
+position = Vector2( 32, 624 )
+
+[node name="WallJumpL3" parent="Grabbables" instance=ExtResource( 8 )]
+position = Vector2( 32, 592 )
+
+[node name="WallJumpL4" parent="Grabbables" instance=ExtResource( 8 )]
+position = Vector2( 32, 560 )
+
+[node name="WallJumpL2" parent="Grabbables" instance=ExtResource( 8 )]
+position = Vector2( 32, 656 )
+
+[node name="WalljumpR" parent="Grabbables" instance=ExtResource( 9 )]
+position = Vector2( 240, 560 )
+
+[node name="WalljumpR2" parent="Grabbables" instance=ExtResource( 9 )]
+position = Vector2( 304, 480 )

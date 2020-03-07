@@ -1,12 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Sprites/Hazards/sprCherry_0.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Hazards/sprCherry_1.png" type="Texture" id=2]
-[ext_resource path="res://Scripts/DelFruit/DelFruit.gd" type="Script" id=3]
-[ext_resource path="res://Scripts/Hitbox.gd" type="Script" id=4]
+[ext_resource path="res://Scripts/Killers/Base.gd" type="Script" id=4]
 
-
-[sub_resource type="SpriteFrames" id=16]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 1 ), ExtResource( 2 ) ],
 "loop": true,
@@ -14,14 +12,13 @@ animations = [ {
 "speed": 3.0
 } ]
 
-[sub_resource type="CircleShape2D" id=17]
+[sub_resource type="CircleShape2D" id=2]
 radius = 10.0499
 
 [node name="DelFruit" type="Node2D"]
-script = ExtResource( 3 )
 
 [node name="Sprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 16 )
+frames = SubResource( 1 )
 frame = 1
 playing = true
 
@@ -34,4 +31,4 @@ script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2( 1, 1 )
-shape = SubResource( 17 )
+shape = SubResource( 2 )
