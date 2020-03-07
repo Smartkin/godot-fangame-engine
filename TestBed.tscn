@@ -9,10 +9,13 @@
 [ext_resource path="res://Objects/Hazards/SpikeLeft.tscn" type="PackedScene" id=7]
 
 [node name="TestBed" type="Node2D"]
+__meta__ = {
+"_editor_description_": "This room is where all aspects of the engine are tested and showcased"
+}
 
 [node name="Platform2" parent="." instance=ExtResource( 3 )]
 position = Vector2( 512, 336 )
-bounce = false
+startSpeed = Vector2( 0, 50 )
 
 [node name="Platform5" parent="." instance=ExtResource( 3 )]
 position = Vector2( 256, 160 )

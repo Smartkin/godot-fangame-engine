@@ -16,7 +16,7 @@ extents = Vector2( 16, 8 )
 [node name="Platform" type="KinematicBody2D"]
 collision_layer = 2
 collision_mask = 5
-collision/safe_margin = 2.0
+collision/safe_margin = 0.5
 motion/sync_to_physics = true
 script = ExtResource( 2 )
 
@@ -42,7 +42,7 @@ one_way_collision = true
 [node name="CollisionChecker" type="KinematicBody2D" parent="."]
 collision_layer = 0
 collision_mask = 4
-collision/safe_margin = 2.0
+collision/safe_margin = 1.0
 motion/sync_to_physics = true
 script = ExtResource( 3 )
 

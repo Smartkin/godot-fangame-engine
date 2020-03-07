@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "GrabbableBase",
+"language": "GDScript",
+"path": "res://Scripts/Grabbable/Base.gd"
+}, {
 "base": "VisualShaderNodeCustom",
 "class": "VisualShaderNodeNoiseGeneric2d",
 "language": "GDScript",
@@ -400,6 +405,7 @@ _global_script_classes=[ {
 "path": "res://Shaders/tools/vec2Compose.gd"
 } ]
 _global_script_class_icons={
+"GrabbableBase": "",
 "VisualShaderNodeNoiseGeneric2d": "",
 "VisualShaderNodeNoisePerlin2d": "",
 "VisualShaderNodeNoisePerlin3d": "",
@@ -498,6 +504,7 @@ settings/stdout/print_fps=true
 gdscript/warnings/treat_warnings_as_errors=true
 gdscript/warnings/unused_variable=false
 gdscript/warnings/unused_argument=false
+gdscript/warnings/return_value_discarded=false
 
 [display]
 
@@ -543,6 +550,7 @@ pl_reset={
 2d_physics/layer_2="Platform"
 2d_physics/layer_3="Block"
 2d_physics/layer_4="Killers"
+2d_physics/layer_5="Grabbables"
 
 [physics]
 

@@ -4,34 +4,33 @@ signal dead
 signal shoot
 signal sound
 
-const UP = Vector2(0, -1)
-const GROUND_SNAP = Vector2.DOWN * 5
-const DEBUG_OUTPUT_RATE = 2
-const MAX_COYOTE = 2
-const MAX_JUMP_BUFFER = 2
+const UP := Vector2.UP
+const GROUND_SNAP := Vector2.DOWN * 5
+const DEBUG_OUTPUT_RATE := 60
+const MAX_COYOTE := 2
+const MAX_JUMP_BUFFER := 2
 
-var speed = Vector2(0, 0)
-var snap = GROUND_SNAP
-var canJump = true
-var canDjump = true
-var setRunSprite = false
-var grabbable = null
-var runSpeed = 190
-var fallSpeed = 420
-var jumpHeight = -450
-var djumpHeight = -350
-var gravity = 20
-var coyoteFrames = 0
-var jumpBuffer = 0
-var debugOutputTimer = 0
-onready var pivotDistance = abs($Pivot.position.x - $CollisionShape2D.position.x)
-onready var collisionStartPos = $CollisionShape2D.position
+var speed := Vector2.ZERO
+var snap := GROUND_SNAP
+var canJump := true
+var canDjump := true
+var setRunSprite := false
+var grabbable: Node2D = null
+var runSpeed := 190
+var fallSpeed := 420
+var jumpHeight := -450
+var djumpHeight := -350
+var gravity := 20
+var coyoteFrames := 0
+var jumpBuffer := 0
+var debugOutputTimer := 0
+onready var pivotDistance := abs($Pivot.position.x - $CollisionShape2D.position.x)
+onready var collisionStartPos: Vector2 = $CollisionShape2D.position
 
-func _ready():
+func _ready() -> void:
 	$Sprite.play("Idle") # Set default sprite animation to idle
 
-func _physics_process(_delta):
-	debugOutputTimer += 1
+func _physics_process(delta: float) -> void:
 	if (is_on_floor()):
 		canJump = true
 		canDjump = true
@@ -43,7 +42,7 @@ func _physics_process(_delta):
 		if (coyoteFrames <= 0):
 			canJump = false
 	handleInputs()
-	speed = move_and_slide_with_snap(speed, snap, UP, false, 4, 0.785398, false)
+	speed = move_and_slide_with_snap(speed, snap, UP)
 	for i in range(get_slide_count()):
 		handleCollision(get_slide_collision(i))
 	if (speed.x == 0 && speed.y == 0 && !setRunSprite):
@@ -52,6 +51,7 @@ func _physics_process(_delta):
 		$Sprite.play("Fall")
 	setRunSprite = false
 	# Debug output
+#	debugOutputTimer += 1
 #	if (debugOutputTimer >= DEBUG_OUTPUT_RATE):
 #		debugOutputTimer = 0
 #		print("Speed: " + String(speed))
@@ -60,8 +60,8 @@ func _physics_process(_delta):
 #		print("Is touching wall: " + String(is_on_wall()))
 
 # Player jumping logic
-func jump(inputBuffer):
-	var jumped = false
+func jump(inputBuffer: int) -> int:
+	var jumped := false
 	if (canJump || grabbable != null):
 		# Jumping in the platform
 		if (grabbable != null):
@@ -82,17 +82,17 @@ func jump(inputBuffer):
 		return 0 # Indicate that the jump buffer input was consumed
 	return inputBuffer - 1
 
-func cutJump():
+func cutJump() -> void:
 	speed.y *= 0.5
 
-func applyGravity():
+func applyGravity() -> void:
 	speed.y += gravity
 	# Cap fall speed
 	if (speed.y >= fallSpeed):
 		speed.y = fallSpeed
 
 # Player running logic
-func run(direction = 0):
+func run(direction: int = 0) -> void:
 	speed.x = runSpeed * direction
 	if (direction != 0):
 		if (speed.y == 0):
@@ -102,7 +102,7 @@ func run(direction = 0):
 		$CollisionShape2D.position.x = collisionStartPos.x - 2 * pivotDistance if (direction == -1) else collisionStartPos.x
 
 
-func handleInputs():
+func handleInputs() -> void:
 	# Handle player jump
 	if (Input.is_action_just_pressed("pl_jump")):
 		jumpBuffer = MAX_JUMP_BUFFER
@@ -124,17 +124,17 @@ func handleInputs():
 	debugInputs()
 
 
-func handleCollision(collision):
+func handleCollision(collision: KinematicCollision2D) -> void:
 	if (collision.collider.is_in_group("Killers")):
 		kill()
 
-func debugInputs():
+func debugInputs() -> void:
 	if (Input.is_key_pressed(ord("W"))): # Warp player to mouse
 		global_position = get_global_mouse_position()
 
-func shoot():
+func shoot() -> void:
 	emit_signal("shoot")
 
-func kill():
+func kill() -> void:
 	emit_signal("dead", position)
 	queue_free()
