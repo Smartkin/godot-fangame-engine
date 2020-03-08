@@ -33,6 +33,7 @@ var setRunSprite := false
 var canSave := false
 var platform: Node2D = null
 var savePoint: Node2D = null
+var faceDirection: int = DIRECTION.RIGHT
 var grabbables: Array = []
 var gravDir := UP
 var curSnap := GROUND_SNAP
@@ -142,6 +143,7 @@ func getGrabDirection() -> int:
 func run(direction: int = 0) -> void:
 	speed.x = runSpeed * direction
 	if (direction != DIRECTION.IDLE):
+		faceDirection = direction
 		if (speed.y == 0):
 			setRunSprite = true
 			$Sprite.play("Run")
@@ -162,7 +164,7 @@ func mirrorHitboxVer(direction: int) -> void:
 	$Hitbox.position.y = mirrorAgainstPivot(direction, collisionStartPos.y, collisionPivotDistance.y)
 	$GrabHitbox/CollisionShape2D.position.y = mirrorAgainstPivot(direction, grabStartPos.y, grabPivotDistance.y)
 
-# Vine sliding logic
+# Sliding logic
 func slideOnGrab(direction: int = 0) -> String:
 	var neededAction = ""
 	var priorityGrabbed: GrabbableBase = grabbables.back()
@@ -261,7 +263,16 @@ func debugPrint() -> void:
 		print("Is touching wall: " + String(is_on_wall()))
 
 func shoot() -> void:
-	emit_signal("shoot")
+	var direction = faceDirection
+	if (curState == STATE.GRAB):
+		var grab: GrabbableBase = grabbables.back()
+		var type = grab.getType()
+		match type:
+			GrabbableBase.TYPE.LEFT:
+				direction = DIRECTION.RIGHT
+			GrabbableBase.TYPE.RIGHT:
+				direction = DIRECTION.LEFT
+	emit_signal("shoot", direction)
 
 func kill() -> void:
 	if (curState != STATE.DEAD): # To prevent emitting this twice

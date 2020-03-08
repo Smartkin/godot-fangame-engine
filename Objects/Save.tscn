@@ -23,7 +23,9 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 16, 16 )
 
-[node name="Save" type="Node2D"]
+[node name="Save" type="Node2D" groups=[
+"GravityAffected",
+]]
 script = ExtResource( 3 )
 
 [node name="Sprite" type="AnimatedSprite" parent="."]
@@ -32,6 +34,7 @@ frames = SubResource( 3 )
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 0
+collision_mask = 33
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
