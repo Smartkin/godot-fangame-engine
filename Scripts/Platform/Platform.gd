@@ -28,6 +28,12 @@ func handle_collision(collider: Node2D, normal: Vector2) -> void:
 			print("Bounce normal: " + String(normal))
 		($CollisionChecker as KinematicBody2D).speed = speed
 
+func reverseGravity() -> void:
+	$CollisionShape2D.scale.y = -1
+
+func normalGravity() -> void:
+	$CollisionShape2D.scale.y = 1
+
 func on_block_collision(collisions: Array) -> void:
 	for i in range(collisions.size()):
 		handle_collision(collisions[i].collider, collisions[i].normal)

@@ -30,9 +30,10 @@ var snap := GROUND_SNAP
 var canJump := true
 var canDjump := true
 var setRunSprite := false
-var reverseGrav := false
 var platform: Node2D = null
 var grabbables: Array = []
+var gravDir := UP
+var curSnap := GROUND_SNAP
 var runSpeed := 190
 var fallSpeed := 420
 var jumpHeight := -450
@@ -55,14 +56,13 @@ func _ready() -> void:
 	$Sprite.play("Idle") # Set default sprite animation to idle
 
 func _physics_process(delta: float) -> void:
-	var up := UP if !reverseGrav else DOWN
 	if (is_on_floor()):
 		if (curState == STATE.GRAB):
 			revertState("resetSprite")
 		canJump = true
 		canDjump = true
 		coyoteFrames = MAX_COYOTE
-		snap = GROUND_SNAP if !reverseGrav else REVERSE_SNAP
+		snap = curSnap
 	else:
 		if (curState != STATE.GRAB):
 			applyGravity()
@@ -70,19 +70,21 @@ func _physics_process(delta: float) -> void:
 		if (coyoteFrames <= 0):
 			canJump = false
 	handleInputs()
-	speed = move_and_slide_with_snap(speed, snap, up)
+	speed = move_and_slide_with_snap(speed, snap, gravDir)
 	for i in range(get_slide_count()):
 		handleCollision(get_slide_collision(i))
 	match curState:
 		STATE.RUN:
-			var fallCondition: bool = speed.y > 0 if !reverseGrav else speed.y < 0
 			if (speed.x == 0 && speed.y == 0 && !setRunSprite):
 				$Sprite.play("Idle")
-			if (fallCondition):
+			if (getFalling()):
 				$Sprite.play("Fall")
 			setRunSprite = false
 	# Debug output
 #	debugPrint()
+
+func getFalling() -> bool:
+	return speed.y > 0 if !WorldController.reverseGrav else speed.y < 0
 
 # Player jumping logic
 func jump(inputBuffer: int) -> int:
@@ -167,40 +169,40 @@ func slideOnGrab(direction: int = 0) -> String:
 	match type:
 		GrabbableBase.TYPE.LEFT:
 			$Sprite.play("VineSlide")
-			$Sprite.position = Vector2(vineSlideOffset.x, vineSlideOffset.y if !reverseGrav else -vineSlideOffset.y)
+			$Sprite.position = Vector2(vineSlideOffset.x, vineSlideOffset.y if !WorldController.reverseGrav else -vineSlideOffset.y)
 			$Sprite.flip_h = false
-			speed.y = slideSpeed if !reverseGrav else -slideSpeed
+			speed.y = slideSpeed if !WorldController.reverseGrav else -slideSpeed
 			neededAction = "pl_right"
 		GrabbableBase.TYPE.RIGHT:
 			$Sprite.play("VineSlide")
-			$Sprite.position = Vector2(-vineSlideOffset.x, vineSlideOffset.y if !reverseGrav else -vineSlideOffset.y)
+			$Sprite.position = Vector2(-vineSlideOffset.x, vineSlideOffset.y if !WorldController.reverseGrav else -vineSlideOffset.y)
 			$Sprite.flip_h = true
-			speed.y = slideSpeed if !reverseGrav else -slideSpeed
+			speed.y = slideSpeed if !WorldController.reverseGrav else -slideSpeed
 			neededAction = "pl_left"
 	return neededAction
 
 # Reverse player's gravity
 func reverseGravity() -> void:
-	if (!reverseGrav):
-		reverseGrav = true
-		gravity = -absi(gravity)
-		jumpHeight = absi(jumpHeight)
-		djumpHeight = absi(djumpHeight)
-		canDjump = true
-		speed.y = 0
-		$Sprite.flip_v = true
-		mirrorHitboxVer(DIRECTION.LEFT)
+	gravity = -absi(gravity)
+	jumpHeight = absi(jumpHeight)
+	djumpHeight = absi(djumpHeight)
+	canDjump = true
+	gravDir = DOWN
+	curSnap = REVERSE_SNAP
+	speed.y = 0
+	$Sprite.flip_v = true
+	mirrorHitboxVer(DIRECTION.LEFT)
 
 func normalGravity() -> void:
-	if (reverseGrav):
-		reverseGrav = false
-		gravity = absi(gravity)
-		jumpHeight = -absi(jumpHeight)
-		djumpHeight = -absi(djumpHeight)
-		canDjump = true
-		speed.y = 0
-		$Sprite.flip_v = false
-		mirrorHitboxVer(DIRECTION.RIGHT)
+	gravity = absi(gravity)
+	jumpHeight = -absi(jumpHeight)
+	djumpHeight = -absi(djumpHeight)
+	canDjump = true
+	gravDir = UP
+	curSnap = GROUND_SNAP
+	speed.y = 0
+	$Sprite.flip_v = false
+	mirrorHitboxVer(DIRECTION.RIGHT)
 
 # Integer abs
 func absi(a: int) -> int:

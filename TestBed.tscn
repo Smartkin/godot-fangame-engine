@@ -721,8 +721,8 @@ bounce = false
 position = Vector2( 848, 192 )
 startSpeed = Vector2( 800, 350 )
 
-[node name="GravitySwitch" parent="Platforms" instance=ExtResource( 11 )]
-position = Vector2( 144, 416 )
-
 [node name="GravitySwitch" parent="." instance=ExtResource( 10 )]
 position = Vector2( 224, 656 )
+
+[node name="GravitySwitch2" parent="." instance=ExtResource( 11 )]
+position = Vector2( 144, 416 )
