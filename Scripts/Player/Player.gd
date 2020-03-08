@@ -30,7 +30,9 @@ var snap := GROUND_SNAP
 var canJump := true
 var canDjump := true
 var setRunSprite := false
+var canSave := false
 var platform: Node2D = null
+var savePoint: Node2D = null
 var grabbables: Array = []
 var gravDir := UP
 var curSnap := GROUND_SNAP
@@ -235,6 +237,9 @@ func handleInputs() -> void:
 		cutJump()
 	# Handle player shooting
 	if (Input.is_action_just_pressed("pl_shoot")):
+		if (canSave):
+			WorldController.saveGame()
+			savePoint.save()
 		shoot()
 	debugInputs()
 

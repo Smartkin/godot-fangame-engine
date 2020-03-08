@@ -1,5 +1,9 @@
 extends Node2D
 
+func _ready():
+	if (WorldController.loadedFromSave):
+		position = WorldController.saveData.playerPos
+
 func _on_Player_dead(playerPos: Vector2) -> void:
 	print(playerPos)
 	position = get_viewport_rect().position
