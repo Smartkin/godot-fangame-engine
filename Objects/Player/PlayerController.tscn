@@ -42,7 +42,9 @@ scale = 3.0
 scale_curve = SubResource( 2 )
 color = Color( 1, 0, 0, 1 )
 
-[node name="PlayerController" type="Node2D"]
+[node name="PlayerController" type="Node2D" groups=[
+"Saved",
+]]
 z_index = 120
 script = ExtResource( 7 )
 __meta__ = {

@@ -2,7 +2,7 @@ extends Node2D
 
 var bullet := preload("res://Objects/Player/Bullet.tscn")
 
-func _ready():
+func sceneBuilt():
 	if (WorldController.loadedFromSave):
 		position = WorldController.saveData.playerPos
 

@@ -44,8 +44,7 @@ func onTreeChange() -> void:
 		if (currentScene != get_tree().current_scene):
 			currentScene = get_tree().current_scene
 			if (currentScene != null):
-				if (currentScene.filename == saveData.scene):
-					onSceneFinished()
+				onSceneFinished()
 
 func loadGame() -> void:
 	var tree := get_tree()
@@ -55,6 +54,9 @@ func loadGame() -> void:
 	tree.change_scene(saveData.scene)
 
 func onSceneFinished() -> void:
+	var tree := get_tree()
 	print("Applying global effects after scene building")
+	tree.call_group_flags(tree.GROUP_CALL_REALTIME, "Saved", "sceneBuilt")
 	if (reverseGrav): # Reverse gravity of all objects that need it
-		get_tree().call_group("GravityAffected", "reverseGravity")
+		tree.call_group_flags(tree.GROUP_CALL_REALTIME, "GravityAffected", "reverseGravity")
+	loadedFromSave = false
