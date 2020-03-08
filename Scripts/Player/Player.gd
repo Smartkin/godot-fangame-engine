@@ -75,12 +75,12 @@ func _physics_process(delta: float) -> void:
 		handleCollision(get_slide_collision(i))
 	match curState:
 		STATE.RUN:
+			var fallCondition: bool = speed.y > 0 if !reverseGrav else speed.y < 0
 			if (speed.x == 0 && speed.y == 0 && !setRunSprite):
 				$Sprite.play("Idle")
-			if (speed.y > 0):
+			if (fallCondition):
 				$Sprite.play("Fall")
 			setRunSprite = false
-	
 	# Debug output
 #	debugPrint()
 
@@ -186,6 +186,7 @@ func reverseGravity() -> void:
 		gravity = -absi(gravity)
 		jumpHeight = absi(jumpHeight)
 		djumpHeight = absi(djumpHeight)
+		canDjump = true
 		speed.y = 0
 		$Sprite.flip_v = true
 		mirrorHitboxVer(DIRECTION.LEFT)
@@ -196,6 +197,7 @@ func normalGravity() -> void:
 		gravity = absi(gravity)
 		jumpHeight = -absi(jumpHeight)
 		djumpHeight = -absi(djumpHeight)
+		canDjump = true
 		speed.y = 0
 		$Sprite.flip_v = false
 		mirrorHitboxVer(DIRECTION.RIGHT)
@@ -273,9 +275,9 @@ func revertState(callback := "") -> void:
 		curState = statesStack.pop_back()
 
 func resetSprite() -> void:
+	print("Reset sprite")
 	$Sprite.position = Vector2.ZERO
 	var grabDirection = getGrabDirection()
-	print("Reset grab state")
 	if (grabDirection == GrabbableBase.TYPE.LEFT):
 		$Sprite.flip_h = true
 	elif (grabDirection == GrabbableBase.TYPE.RIGHT):
