@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Objects/Block.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Objects/Player/PlayerController.tscn" type="PackedScene" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://Objects/Gimmicks/GravitySwitchNormal.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Objects/Save.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Objects/Warp.tscn" type="PackedScene" id=13]
+[ext_resource path="res://Objects/Gimmicks/Water.tscn" type="PackedScene" id=14]
 
 [node name="TestBed" type="Node2D"]
 __meta__ = {
@@ -735,3 +736,15 @@ position = Vector2( 144, 656 )
 [node name="Warp" parent="." instance=ExtResource( 13 )]
 position = Vector2( 976, 96 )
 warpTo = "res://TestBed2.tscn"
+
+[node name="Water" parent="." instance=ExtResource( 14 )]
+position = Vector2( 128, 480 )
+
+[node name="Water2" parent="." instance=ExtResource( 14 )]
+position = Vector2( 160, 480 )
+
+[node name="Water3" parent="." instance=ExtResource( 14 )]
+position = Vector2( 160, 512 )
+
+[node name="Water4" parent="." instance=ExtResource( 14 )]
+position = Vector2( 128, 512 )

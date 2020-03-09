@@ -408,6 +408,11 @@ _global_script_classes=[ {
 "class": "VisualShaderToolsvec2Compose",
 "language": "GDScript",
 "path": "res://Shaders/tools/vec2Compose.gd"
+}, {
+"base": "Node2D",
+"class": "WaterBase",
+"language": "GDScript",
+"path": "res://Scripts/Water/Water.gd"
 } ]
 _global_script_class_icons={
 "GrabbableBase": "",
@@ -489,7 +494,8 @@ _global_script_class_icons={
 "VisualShaderToolsRemap": "",
 "VisualShaderToolsSinTIME": "",
 "VisualShaderToolsTIMEscaled": "",
-"VisualShaderToolsvec2Compose": ""
+"VisualShaderToolsvec2Compose": "",
+"WaterBase": ""
 }
 
 [application]

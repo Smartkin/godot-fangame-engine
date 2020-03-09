@@ -77,7 +77,6 @@ texture = ExtResource( 6 )
 [node name="Blood" type="Particles2D" parent="."]
 emitting = false
 amount = 500
-lifetime = 2.0
 process_material = SubResource( 7 )
 
 [node name="BloodTimer" type="Timer" parent="."]

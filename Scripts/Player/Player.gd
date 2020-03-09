@@ -24,24 +24,34 @@ const REVERSE_SNAP := Vector2.UP * 5
 const DEBUG_OUTPUT_RATE := 60
 const MAX_COYOTE := 2
 const MAX_JUMP_BUFFER := 2
+const DEFAULT_RUN := 190
+const DEFAULT_FALL := 420
+const DEFAULT_JUMP := 450
+const DEFAULT_DJUMP := 350
+const DEFAULT_GRAV := 20
 
 var speed := Vector2.ZERO
 var snap := GROUND_SNAP
 var canJump := true
 var canDjump := true
 var setRunSprite := false
+var loseDjump := false
 var canSave := false
+var inWater := false
+var hadDjump := false
+var jumpedInWater := false
 var platform: Node2D = null
 var savePoint: Node2D = null
 var faceDirection: int = DIRECTION.RIGHT
 var grabbables: Array = []
+var waters: Array = []
 var gravDir := UP
 var curSnap := GROUND_SNAP
-var runSpeed := 190
-var fallSpeed := 420
-var jumpHeight := -450
-var djumpHeight := -350
-var gravity := 20
+var runSpeed := DEFAULT_RUN
+var fallSpeed := DEFAULT_FALL
+var jumpHeight := -DEFAULT_JUMP
+var djumpHeight := -DEFAULT_DJUMP
+var gravity := DEFAULT_GRAV
 var coyoteFrames := 0
 var jumpBuffer := 0
 var debugOutputTimer := 0
@@ -72,6 +82,18 @@ func _physics_process(delta: float) -> void:
 		coyoteFrames -= 1
 		if (coyoteFrames <= 0):
 			canJump = false
+	if (waters.size() != 0):
+		if (!inWater):
+			hadDjump = canDjump
+		applyWaterEffects()
+		inWater = true
+	else:
+		if (inWater):
+			inWater = false
+			resetFallingSpeed()
+			if (loseDjump):
+				canDjump = hadDjump
+				loseDjump = false
 	handleInputs()
 	speed = move_and_slide_with_snap(speed, snap, gravDir)
 	for i in range(get_slide_count()):
@@ -86,8 +108,28 @@ func _physics_process(delta: float) -> void:
 	# Debug output
 #	debugPrint()
 
+func applyWaterEffects() -> void:
+	var water: WaterBase = waters.back()
+	fallSpeed = water.fallSpeed
+	match water.type:
+		WaterBase.TYPE.Water1:
+			canJump = true
+			canDjump = true
+		WaterBase.TYPE.Water2:
+			loseDjump = true
+			canDjump = true
+		WaterBase.TYPE.Water3:
+			canDjump = true
+
+# Whether player is currently falling
 func getFalling() -> bool:
 	return speed.y > 0 if !WorldController.reverseGrav else speed.y < 0
+
+func resetFallingSpeed() -> void:
+	fallSpeed = DEFAULT_FALL
+
+func setFallingSpeed(newFallSpeed: int) -> void:
+	fallSpeed = newFallSpeed
 
 # Player jumping logic
 func jump(inputBuffer: int) -> int:
@@ -104,6 +146,7 @@ func jump(inputBuffer: int) -> int:
 				jumped = true
 				emit_signal("sound", "Jump")
 			elif (canDjump):
+				hadDjump = false
 				speed.y = djumpHeight
 				canDjump = false
 				jumped = true
@@ -132,8 +175,12 @@ func cutJump() -> void:
 func applyGravity() -> void:
 	speed.y += gravity
 	# Cap fall speed
-	if (speed.y >= fallSpeed):
-		speed.y = fallSpeed
+	if (!WorldController.reverseGrav):
+		if (speed.y >= fallSpeed):
+			speed.y = fallSpeed
+	else:
+		if (speed.y <= -fallSpeed):
+			speed.y = -fallSpeed
 
 func getGrabDirection() -> int:
 	var priorityGrabbed: GrabbableBase = grabbables.back()
@@ -187,9 +234,9 @@ func slideOnGrab(direction: int = 0) -> String:
 
 # Reverse player's gravity
 func reverseGravity() -> void:
-	gravity = -absi(gravity)
-	jumpHeight = absi(jumpHeight)
-	djumpHeight = absi(djumpHeight)
+	gravity = -DEFAULT_GRAV
+	jumpHeight = DEFAULT_JUMP
+	djumpHeight = DEFAULT_DJUMP
 	canDjump = true
 	gravDir = DOWN
 	curSnap = REVERSE_SNAP
@@ -198,9 +245,9 @@ func reverseGravity() -> void:
 	mirrorHitboxVer(DIRECTION.LEFT)
 
 func normalGravity() -> void:
-	gravity = absi(gravity)
-	jumpHeight = -absi(jumpHeight)
-	djumpHeight = -absi(djumpHeight)
+	gravity = DEFAULT_GRAV
+	jumpHeight = -DEFAULT_JUMP
+	djumpHeight = -DEFAULT_DJUMP
 	canDjump = true
 	gravDir = UP
 	curSnap = GROUND_SNAP

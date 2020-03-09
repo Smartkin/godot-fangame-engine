@@ -1,7 +1,7 @@
 extends Node
 
 var reverseGrav := false setget setGrav,getGrav
-var loadedFromSave := false
+var loadingSave := false
 var currentScene: Node = null
 var saveData := {
 	"playerPos": Vector2.ZERO,
@@ -18,6 +18,8 @@ func _input(event: InputEvent) -> void:
 		loadGame()
 
 func getGrav() -> bool:
+	if (loadingSave):
+		return !saveData.reverseGrav
 	return reverseGrav
 
 func setGrav(on: bool) -> void:
@@ -40,23 +42,29 @@ func saveGame() -> void:
 
 # Monitor tree change and if scene changed apply post scene finishing effects
 func onTreeChange() -> void:
-	if (get_tree() != null):
-		if (currentScene != get_tree().current_scene):
-			currentScene = get_tree().current_scene
+	var tree := get_tree()
+	if (tree != null):
+		if (currentScene != tree.current_scene):
+			currentScene = tree.current_scene
 			if (currentScene != null):
 				onSceneFinished()
 
 func loadGame() -> void:
 	var tree := get_tree()
-	loadedFromSave = true
+	loadingSave = true
 	# Load data
 	reverseGrav = saveData.reverseGrav
 	tree.change_scene(saveData.scene)
 
+# Wrapper for call_group_flags(tree.GROUP_CALL_REALTIME, groupName, funcName)
+func callGroup(groupName: String, funcName: String) -> void:
+	var tree := get_tree()
+	tree.call_group_flags(tree.GROUP_CALL_REALTIME, groupName, funcName)
+
 func onSceneFinished() -> void:
 	var tree := get_tree()
 	print("Applying global effects after scene building")
-	tree.call_group_flags(tree.GROUP_CALL_REALTIME, "Saved", "sceneBuilt")
+	callGroup("Saved", "sceneBuilt")
 	if (reverseGrav): # Reverse gravity of all objects that need it
-		tree.call_group_flags(tree.GROUP_CALL_REALTIME, "GravityAffected", "reverseGravity")
-	loadedFromSave = false
+		callGroup("GravityAffected", "reverseGravity")
+	loadingSave = false
