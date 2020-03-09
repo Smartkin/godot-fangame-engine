@@ -19,8 +19,8 @@ enum DIRECTION {
 
 const UP := Vector2.UP
 const DOWN := Vector2.DOWN
-const GROUND_SNAP := Vector2.DOWN * 5
-const REVERSE_SNAP := Vector2.UP * 5
+const GROUND_SNAP := Vector2.DOWN * 10
+const REVERSE_SNAP := Vector2.UP * 10
 const DEBUG_OUTPUT_RATE := 60
 const MAX_COYOTE := 2
 const MAX_JUMP_BUFFER := 2
@@ -29,6 +29,7 @@ const DEFAULT_FALL := 420
 const DEFAULT_JUMP := 450
 const DEFAULT_DJUMP := 350
 const DEFAULT_GRAV := 20
+const MAX_SLOP_ANGLE := deg2rad(50)
 
 var speed := Vector2.ZERO
 var snap := GROUND_SNAP
@@ -77,8 +78,6 @@ func _physics_process(delta: float) -> void:
 		coyoteFrames = MAX_COYOTE
 		snap = curSnap
 	else:
-		if (curState != STATE.GRAB):
-			applyGravity()
 		coyoteFrames -= 1
 		if (coyoteFrames <= 0):
 			canJump = false
@@ -94,13 +93,15 @@ func _physics_process(delta: float) -> void:
 			if (loseDjump):
 				canDjump = hadDjump
 				loseDjump = false
+	if (curState != STATE.GRAB):
+			applyGravity()
 	handleInputs()
-	speed = move_and_slide_with_snap(speed, snap, gravDir)
+	speed.y = move_and_slide_with_snap(speed, snap, gravDir, true, 4, MAX_SLOP_ANGLE).y
 	for i in range(get_slide_count()):
 		handleCollision(get_slide_collision(i))
 	match curState:
 		STATE.RUN:
-			if (speed.x == 0 && speed.y == 0 && !setRunSprite):
+			if (speed.x == 0 && is_on_floor() && !setRunSprite):
 				$Sprite.play("Idle")
 			if (getFalling()):
 				$Sprite.play("Fall")
@@ -123,7 +124,8 @@ func applyWaterEffects() -> void:
 
 # Whether player is currently falling
 func getFalling() -> bool:
-	return speed.y > 0 if !WorldController.reverseGrav else speed.y < 0
+	var falling = speed.y > 0 if !WorldController.reverseGrav else speed.y < 0
+	return falling && !is_on_floor()
 
 func resetFallingSpeed() -> void:
 	fallSpeed = DEFAULT_FALL
@@ -191,7 +193,7 @@ func run(direction: int = 0) -> void:
 	speed.x = runSpeed * direction
 	if (direction != DIRECTION.IDLE):
 		faceDirection = direction
-		if (speed.y == 0):
+		if (is_on_floor()):
 			setRunSprite = true
 			$Sprite.play("Run")
 		$Sprite.flip_h = (direction == DIRECTION.LEFT)

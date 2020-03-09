@@ -197,9 +197,6 @@ position = Vector2( 112, 352 )
 [node name="Block31" parent="Blocks3" instance=ExtResource( 1 )]
 position = Vector2( 96, 480 )
 
-[node name="Block32" parent="Blocks3" instance=ExtResource( 1 )]
-position = Vector2( 96, 448 )
-
 [node name="Block17" parent="Blocks3" instance=ExtResource( 1 )]
 position = Vector2( 240, 448 )
 
@@ -724,6 +721,24 @@ bounce = false
 position = Vector2( 848, 192 )
 startSpeed = Vector2( 800, 350 )
 
+[node name="Waters" type="Node2D" parent="."]
+
+[node name="Water" parent="Waters" instance=ExtResource( 14 )]
+position = Vector2( 128, 480 )
+type = 0
+
+[node name="Water2" parent="Waters" instance=ExtResource( 14 )]
+position = Vector2( 160, 480 )
+type = 0
+
+[node name="Water3" parent="Waters" instance=ExtResource( 14 )]
+position = Vector2( 160, 512 )
+type = 0
+
+[node name="Water4" parent="Waters" instance=ExtResource( 14 )]
+position = Vector2( 128, 512 )
+type = 0
+
 [node name="GravitySwitch" parent="." instance=ExtResource( 10 )]
 position = Vector2( 224, 656 )
 
@@ -736,15 +751,3 @@ position = Vector2( 144, 656 )
 [node name="Warp" parent="." instance=ExtResource( 13 )]
 position = Vector2( 976, 96 )
 warpTo = "res://TestBed2.tscn"
-
-[node name="Water" parent="." instance=ExtResource( 14 )]
-position = Vector2( 128, 480 )
-
-[node name="Water2" parent="." instance=ExtResource( 14 )]
-position = Vector2( 160, 480 )
-
-[node name="Water3" parent="." instance=ExtResource( 14 )]
-position = Vector2( 160, 512 )
-
-[node name="Water4" parent="." instance=ExtResource( 14 )]
-position = Vector2( 128, 512 )
