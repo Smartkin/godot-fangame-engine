@@ -8,7 +8,8 @@ var playerDead := false
 # Callback from WorldController when a finish is changed and finishes being built
 func sceneBuilt() -> void:
 	if (WorldController.loadingSave):
-		position = WorldController.saveData.playerPos
+		position.x = WorldController.saveData.playerPosX
+		position.y = WorldController.saveData.playerPosY
 	$Camera.current = true
 
 func _physics_process(delta: float) -> void:
@@ -25,6 +26,8 @@ func _on_Player_dead(playerPos: Vector2) -> void:
 	$BloodTimer.start()
 	$Sounds/Death.play()
 	playerDead = true
+	WorldController.globalData.deaths += 1
+	WorldController.saveToFile() # Save only deaths/time
 
 func _input(event: InputEvent) -> void:
 	var zoomSpeed = Vector2(0.05, 0.05)

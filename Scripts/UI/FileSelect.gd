@@ -16,7 +16,13 @@ func _on_SaveSlots_tab_changed(tab: int) -> void:
 	WorldController.saveSlot = tab
 
 func startNewGame() -> void:
+	WorldController.gameStarted = true
+	WorldController.startNewGame = true
 	get_tree().change_scene(startScene)
 
 func _on_Save_NewGamePressed() -> void:
 	startNewGame()
+
+func _on_Save_LoadGamePressed():
+	WorldController.gameStarted = true
+	WorldController.loadGame(true)
