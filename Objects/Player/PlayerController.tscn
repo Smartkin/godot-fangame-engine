@@ -74,6 +74,7 @@ process_material = SubResource( 7 )
 one_shot = true
 
 [node name="Camera" type="Camera2D" parent="."]
+zoom = Vector2( 0.5, 0.5 )
 process_mode = 0
 limit_left = 0
 limit_top = 0
@@ -85,7 +86,7 @@ editor_draw_limits = true
 
 [node name="CameraFollowLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="CenterContainer" parent="CameraFollowLayer"]
+[node name="UiCentered" type="CenterContainer" parent="CameraFollowLayer"]
 margin_right = 1280.0
 margin_bottom = 720.0
 __meta__ = {
@@ -93,7 +94,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GameOver" type="TextureRect" parent="CameraFollowLayer/UI"]
+[node name="GameOver" type="TextureRect" parent="CameraFollowLayer/UiCentered"]
 visible = false
 margin_left = 261.0
 margin_top = 281.0

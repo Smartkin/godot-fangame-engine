@@ -7,6 +7,8 @@ var saveData := {
 	"scene": "res://TestBed2.tscn",
 	"reverseGrav": false
 } setget setSaveData, getSaveData
+var saveSlot := 0
+var saveFiles := 3
 
 # Readonly
 var loadingSave := false setget , getLoadingSave

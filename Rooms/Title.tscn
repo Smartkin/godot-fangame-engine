@@ -37,15 +37,3 @@ margin_bottom = 436.0
 text = "GODOT ENGINE"
 align = 3
 valign = 3
-
-[node name="PressButton" type="Label" parent="."]
-margin_left = 32.0
-margin_top = 544.0
-margin_right = 1260.0
-margin_bottom = 696.0
-text = "PRESS TO START"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}

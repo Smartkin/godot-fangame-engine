@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Tiles/BrownBlocksTiles1.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Fonts/ABeeZee-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Scripts/UI/FileSelect.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/UI/FileSelectTabStyle.tres" type="StyleBox" id=4]
+[ext_resource path="res://Objects/UI/FileSelect/SaveTabTemplate.tscn" type="PackedScene" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=2]
+default_font = SubResource( 1 )
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[node name="FileSelect" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 2
+theme = SubResource( 2 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+startScene = "res://TestBed.tscn"
+
+[node name="TileMap" parent="." instance=ExtResource( 1 )]
+cell_size = Vector2( 32, 32 )
+tile_data = PoolIntArray( 0, 1, 0, 1, 2, 0, 2, 2, 0, 3, 2, 0, 4, 2, 0, 5, 2, 0, 6, 2, 0, 7, 2, 0, 8, 2, 0, 9, 2, 0, 10, 2, 0, 11, 2, 0, 12, 2, 0, 13, 2, 0, 14, 2, 0, 15, 2, 0, 16, 2, 0, 17, 2, 0, 18, 2, 0, 19, 2, 0, 20, 2, 0, 21, 2, 0, 22, 2, 0, 23, 2, 0, 24, 2, 0, 25, 2, 0, 26, 2, 0, 27, 2, 0, 28, 2, 0, 29, 2, 0, 30, 2, 0, 31, 2, 0, 32, 2, 0, 33, 2, 0, 34, 2, 0, 35, 2, 0, 36, 2, 0, 37, 2, 0, 38, 2, 0, 39, 3, 0, 65536, 1, 0, 65575, 1, 0, 131072, 1, 0, 131111, 1, 0, 196608, 1, 0, 196647, 1, 0, 262144, 1, 0, 262183, 1, 0, 327680, 1, 0, 327719, 1, 0, 393216, 1, 0, 393255, 1, 0, 458752, 1, 0, 458791, 1, 0, 524288, 1, 0, 524327, 1, 0, 589824, 1, 0, 589863, 1, 0, 655360, 1, 0, 655399, 1, 0, 720896, 1, 0, 720935, 1, 0, 786432, 1, 0, 786471, 1, 0, 851968, 1, 0, 852007, 1, 0, 917504, 1, 0, 917543, 1, 0, 983040, 1, 0, 983079, 1, 0, 1048576, 1, 0, 1048615, 1, 0, 1114112, 1, 0, 1114151, 1, 0, 1179648, 1, 0, 1179687, 1, 0, 1245184, 1, 0, 1245223, 1, 0, 1310720, 1, 0, 1310759, 1, 0, 1376256, 1, 0, 1376295, 1, 0, 1441792, 1, 0, 1441793, 0, 0, 1441794, 0, 0, 1441795, 0, 0, 1441796, 0, 0, 1441797, 0, 0, 1441798, 0, 0, 1441799, 0, 0, 1441800, 0, 0, 1441801, 0, 0, 1441802, 0, 0, 1441803, 0, 0, 1441804, 0, 0, 1441805, 0, 0, 1441806, 0, 0, 1441807, 0, 0, 1441808, 0, 0, 1441809, 0, 0, 1441810, 0, 0, 1441811, 0, 0, 1441812, 0, 0, 1441813, 0, 0, 1441814, 0, 0, 1441815, 0, 0, 1441816, 0, 0, 1441817, 0, 0, 1441818, 0, 0, 1441819, 0, 0, 1441820, 0, 0, 1441821, 0, 0, 1441822, 0, 0, 1441823, 0, 0, 1441824, 0, 0, 1441825, 0, 0, 1441826, 0, 0, 1441827, 0, 0, 1441828, 0, 0, 1441829, 0, 0, 1441830, 0, 0, 1441831, 1, 0 )
+
+[node name="SaveSlots" type="TabContainer" parent="."]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 1248.0
+margin_bottom = 704.0
+custom_styles/tab_fg = ExtResource( 4 )
+custom_styles/tab_bg = ExtResource( 4 )
+custom_styles/panel = SubResource( 3 )
+drag_to_rearrange_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Save 1" parent="SaveSlots" instance=ExtResource( 5 )]
+
+[node name="Save 2" parent="SaveSlots" instance=ExtResource( 5 )]
+visible = false
+
+[node name="Save 3" parent="SaveSlots" instance=ExtResource( 5 )]
+visible = false
+[connection signal="tab_changed" from="SaveSlots" to="." method="_on_SaveSlots_tab_changed"]
+[connection signal="NewGamePressed" from="SaveSlots/Save 1" to="." method="_on_Save_NewGamePressed"]
+[connection signal="NewGamePressed" from="SaveSlots/Save 2" to="." method="_on_Save_NewGamePressed"]
+[connection signal="NewGamePressed" from="SaveSlots/Save 3" to="." method="_on_Save_NewGamePressed"]
