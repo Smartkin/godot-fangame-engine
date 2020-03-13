@@ -70,35 +70,40 @@ func _ready() -> void:
 	$Sprite.play("Idle") # Set default sprite animation to idle
 
 func _physics_process(delta: float) -> void:
+	# Check if player is currently on floor
 	if (is_on_floor()):
-		if (curState == STATE.GRAB):
+		if (curState == STATE.GRAB): # Something was being grabbed set free
 			revertState("resetSprite")
+		# Regain jumping
 		canJump = true
 		canDjump = true
 		coyoteFrames = MAX_COYOTE
 		snap = curSnap
-	else:
+	else: # When ground is left give some leeway before taking the single jump away
 		coyoteFrames -= 1
 		if (coyoteFrames <= 0):
 			canJump = false
+	# Check for any current water collisions
 	if (waters.size() != 0):
-		if (!inWater):
+		if (!inWater): # If water was just entered
 			hadDjump = canDjump
 		applyWaterEffects()
 		inWater = true
 	else:
-		if (inWater):
+		if (inWater): # If water was just left
 			inWater = false
-			resetFallingSpeed()
-			if (loseDjump):
-				canDjump = hadDjump
+			resetFallingSpeed() # Revert fallspeed to standard one
+			if (loseDjump): # Check if water doesn't give djump back
+				canDjump = hadDjump # Get djump back if it wasn't used while in water
 				loseDjump = false
-	if (curState != STATE.GRAB):
+	if (curState != STATE.GRAB): # If nothing is grabbed apply gravity
 			applyGravity()
-	handleInputs()
+	handleInputs() # Process player's current inputs
+	# Perform player movement but preserve only vertical momentum since we don't want any for horizontal
 	speed.y = move_and_slide_with_snap(speed, snap, gravDir, true, 4, MAX_SLOP_ANGLE).y
-	for i in range(get_slide_count()):
+	for i in range(get_slide_count()): # Handle all the collisions that occured if needed
 		handleCollision(get_slide_collision(i))
+	# Handle current sprite depending on player's state
 	match curState:
 		STATE.RUN:
 			if (speed.x == 0 && is_on_floor() && !setRunSprite):
@@ -110,9 +115,9 @@ func _physics_process(delta: float) -> void:
 #	debugPrint()
 
 func applyWaterEffects() -> void:
-	var water: WaterBase = waters.back()
-	fallSpeed = water.fallSpeed
-	match water.type:
+	var water: WaterBase = waters.back() # Get the last entered water tile
+	setFallingSpeed(water.fallSpeed) # Match our fall speed with its
+	match water.type: # Change player's jumping logic depending on water type
 		WaterBase.TYPE.Water1:
 			canJump = true
 			canDjump = true
@@ -125,24 +130,28 @@ func applyWaterEffects() -> void:
 # Whether player is currently falling
 func getFalling() -> bool:
 	var falling = speed.y > 0 if !WorldController.reverseGrav else speed.y < 0
+	# Due to how slopes operate in Godot there can still be some leftover vertical speed
+	# so additionally check if player is currently standing on a ground
 	return falling && !is_on_floor()
 
+# Resets player's fall speed to his default one
 func resetFallingSpeed() -> void:
 	fallSpeed = DEFAULT_FALL
 
+# Sets player's fall speed
 func setFallingSpeed(newFallSpeed: int) -> void:
 	fallSpeed = newFallSpeed
 
 # Player jumping logic
 func jump(inputBuffer: int) -> int:
 	var jumped := false
-	match curState:
-		STATE.RUN:
+	match curState: # Change jumping logic depending on state
+		STATE.RUN: # Player is roaming/running around
 			if (canJump || platform != null):
 				# Jumping in the platform
 				if (platform != null):
 					canDjump = true
-				else:
+				else: # If platform is not collided with take single jump away
 					canJump = false
 				speed.y = jumpHeight
 				jumped = true
@@ -153,30 +162,34 @@ func jump(inputBuffer: int) -> int:
 				canDjump = false
 				jumped = true
 				emit_signal("sound", "Djump")
-		STATE.GRAB:
+		STATE.GRAB: # Player is grabbing onto something(ex. a vine)
 			var grabDirection = getGrabDirection()
 			var hitboxDirection = DIRECTION.IDLE
 			if (grabDirection == GrabbableBase.TYPE.LEFT):
 				hitboxDirection = DIRECTION.RIGHT
 			elif (grabDirection == GrabbableBase.TYPE.RIGHT):
 				hitboxDirection = DIRECTION.LEFT
-			revertState("resetSprite")
+			revertState("resetSprite") # Jump off the grabbable object
 			emit_signal("sound", "Jump")
 			mirrorHitboxHor(hitboxDirection)
+			# TODO: set speed depending on the grabbed surface
 			speed = Vector2(3 * runSpeed * hitboxDirection, jumpHeight)
 			jumped = true
-	if (jumped):
+	if (jumped): # If the player jumped
 		$Sprite.play("Jump")
 		snap = Vector2.ZERO
 		return 0 # Indicate that the jump buffer input was consumed
 	return inputBuffer - 1
 
+# Allows for variable jump heights
 func cutJump() -> void:
 	speed.y *= 0.5
 
+# Apply gravity to the player
 func applyGravity() -> void:
+	# TODO: Potentially allow for arbitrary gravity direction make it Vector2
 	speed.y += gravity
-	# Cap fall speed
+	# Cap fall speed depending on world's gravity
 	if (!WorldController.reverseGrav):
 		if (speed.y >= fallSpeed):
 			speed.y = fallSpeed
@@ -184,12 +197,13 @@ func applyGravity() -> void:
 		if (speed.y <= -fallSpeed):
 			speed.y = -fallSpeed
 
+# Returns last grabbed surface's type
 func getGrabDirection() -> int:
 	var priorityGrabbed: GrabbableBase = grabbables.back()
 	return priorityGrabbed.type
 
 # Player running logic
-func run(direction: int = 0) -> void:
+func run(direction: int = DIRECTION.IDLE) -> void:
 	speed.x = runSpeed * direction
 	if (direction != DIRECTION.IDLE):
 		faceDirection = direction
@@ -215,11 +229,11 @@ func mirrorHitboxVer(direction: int) -> void:
 
 # Sliding logic
 func slideOnGrab(direction: int = 0) -> String:
-	var neededAction = ""
-	var priorityGrabbed: GrabbableBase = grabbables.back()
+	var neededAction = "" # Required input to let go of the grabbed surface
+	var priorityGrabbed: GrabbableBase = grabbables.back() # Check against the last grabbed surface
 	var type = priorityGrabbed.type
 	var slideSpeed = priorityGrabbed.slideSpeed
-	match type:
+	match type: # Change logic depending on what type of grabbed surface it is
 		GrabbableBase.TYPE.LEFT:
 			$Sprite.play("VineSlide")
 			$Sprite.position = Vector2(vineSlideOffset.x, vineSlideOffset.y if !WorldController.reverseGrav else -vineSlideOffset.y)
@@ -246,6 +260,7 @@ func reverseGravity() -> void:
 	$Sprite.flip_v = true
 	mirrorHitboxVer(DIRECTION.LEFT)
 
+# Return player's gravity to normal state
 func normalGravity() -> void:
 	gravity = DEFAULT_GRAV
 	jumpHeight = -DEFAULT_JUMP
@@ -257,10 +272,13 @@ func normalGravity() -> void:
 	$Sprite.flip_v = false
 	mirrorHitboxVer(DIRECTION.RIGHT)
 
-# Integer abs
+# Integer version of abs since we use static typing abs only works with floats
 func absi(a: int) -> int:
-	return abs(a as float) as int
+	if (a < 0):
+		return -a
+	return a
 
+# Input processing
 func handleInputs() -> void:
 	# Handle player run
 	var direction: int = DIRECTION.IDLE
@@ -284,24 +302,27 @@ func handleInputs() -> void:
 		jumpBuffer = jump(jumpBuffer)
 		print(speed)
 	# Handle player jump release
-	if (Input.is_action_just_released("pl_jump") && speed.y < 0):
+	if (Input.is_action_just_released("pl_jump") && !getFalling()):
 		cutJump()
 	# Handle player shooting
 	if (Input.is_action_just_pressed("pl_shoot")):
-		if (canSave):
+		if (canSave): # Check if we are standing in a save point
 			WorldController.saveGame()
 			savePoint.save()
 		shoot()
 	debugInputs()
 
+# Handle any specific needed collisions
 func handleCollision(collision: KinematicCollision2D) -> void:
-	if (collision.collider.is_in_group("Killers")):
+	if (collision.collider.is_in_group("Killers")): # Check if we collided with a killer(spike, delfruit, etc.)
 		kill()
 
+# Any necessary debug inputs like warping to mouse, saving anywhere, godmode, etc.
 func debugInputs() -> void:
 	if (Input.is_key_pressed(ord("W"))): # Warp player to mouse
 		global_position = get_global_mouse_position()
 
+# Any debug information that needs to be printed into the console
 func debugPrint() -> void:
 	debugOutputTimer += 1
 	if (debugOutputTimer >= DEBUG_OUTPUT_RATE):
@@ -311,9 +332,10 @@ func debugPrint() -> void:
 		print("Is on ceiling: " + String(is_on_ceiling()))
 		print("Is touching wall: " + String(is_on_wall()))
 
+# Player shooting logic
 func shoot() -> void:
 	var direction = faceDirection
-	if (curState == STATE.GRAB):
+	if (curState == STATE.GRAB): # If we are grabbed onto something allow to manipulate shoot direction logic
 		var grab: GrabbableBase = grabbables.back()
 		var type = grab.getType()
 		match type:
@@ -321,26 +343,28 @@ func shoot() -> void:
 				direction = DIRECTION.RIGHT
 			GrabbableBase.TYPE.RIGHT:
 				direction = DIRECTION.LEFT
-	emit_signal("shoot", direction)
+	emit_signal("shoot", direction) # Tell player controller to create a bullet
 
+# Kill the player
 func kill() -> void:
 	if (curState != STATE.DEAD): # To prevent emitting this twice
-		emit_signal("dead", global_position)
+		emit_signal("dead", global_position) # Tell player controller to do all the necessary post death logic
 		switchState(STATE.DEAD)
-	queue_free()
+	queue_free() # Destroy the player
 
-# Puts player in a new state
+# Puts player in a new state and pushes the previous state onto a stack
 func switchState(newState: int) -> void:
 	statesStack.push_back(curState)
 	curState = newState
 
-# Reverts player to previous state
+# Reverts player to previous state, pops the state stack if it's not empty and performs a function call if one was set
 func revertState(callback := "") -> void:
 	if (callback != ""):
 		call(callback)
 	if (statesStack.size() != 0):
 		curState = statesStack.pop_back()
 
+# Resets sprite's parameters like if it was offset from player's origin or flipped
 func resetSprite() -> void:
 	print("Reset sprite")
 	$Sprite.position = Vector2.ZERO
@@ -350,13 +374,15 @@ func resetSprite() -> void:
 	elif (grabDirection == GrabbableBase.TYPE.RIGHT):
 		$Sprite.flip_h = false
 
+# Grabbable surface was found
 func _on_Grab_body_entered(body: GrabbableBase) -> void:
 	print("Touched grabbable surface")
 	grabbables.push_back(body)
 	if (!is_on_floor() && curState != STATE.CUTSCENE):
 		switchState(STATE.GRAB)
 
+# Grabbable surface was exited
 func _on_Grab_body_exited(body: GrabbableBase) -> void:
 	print("Left grabbable surface")
 	revertState("resetSprite")
-	grabbables.erase(body)
+	grabbables.erase(body) # We don't perform any checks since a body MUST be entered before it can be left

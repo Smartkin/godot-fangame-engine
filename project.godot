@@ -573,4 +573,5 @@ pl_reset={
 quality/intended_usage/framebuffer_allocation=0
 quality/2d/use_pixel_snap=true
 threads/thread_model=2
+environment/default_clear_color=Color( 0.266667, 0.501961, 0.709804, 1 )
 environment/default_environment="res://default_env.tres"

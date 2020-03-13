@@ -1,13 +1,18 @@
 extends Node
 
+# Public members
 var reverseGrav := false setget setGrav,getGrav
-var loadingSave := false
-var currentScene: Node = null
 var saveData := {
 	"playerPos": Vector2.ZERO,
 	"scene": "res://TestBed2.tscn",
 	"reverseGrav": false
 } setget setSaveData, getSaveData
+
+# Readonly
+var loadingSave := false setget , getLoadingSave
+
+# Private
+var currentScene: Node = null
 
 func _ready() -> void:
 	print("World created")
@@ -31,6 +36,9 @@ func getSaveData() -> Dictionary:
 func setSaveData(data: Dictionary) -> void:
 	if (data.has_all(saveData.keys())): # Check that new data has all the required keys
 		saveData = data
+
+func getLoadingSave() -> bool:
+	return loadingSave
 
 func saveGame() -> void:
 	var tree := get_tree()

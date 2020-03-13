@@ -47,9 +47,6 @@ color = Color( 1, 0, 0, 1 )
 ]]
 z_index = 120
 script = ExtResource( 7 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 z_index = 1
@@ -68,12 +65,6 @@ stream = ExtResource( 4 )
 [node name="Shoot" type="AudioStreamPlayer" parent="Sounds"]
 stream = ExtResource( 5 )
 
-[node name="GameOver" type="Sprite" parent="."]
-visible = false
-position = Vector2( 644, 341 )
-z_index = 4096
-texture = ExtResource( 6 )
-
 [node name="Blood" type="Particles2D" parent="."]
 emitting = false
 amount = 500
@@ -81,6 +72,35 @@ process_material = SubResource( 7 )
 
 [node name="BloodTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="Camera" type="Camera2D" parent="."]
+process_mode = 0
+limit_left = 0
+limit_top = 0
+limit_right = 1280
+limit_bottom = 720
+limit_smoothed = true
+smoothing_enabled = true
+editor_draw_limits = true
+
+[node name="CameraFollowLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="CenterContainer" parent="CameraFollowLayer"]
+margin_right = 1280.0
+margin_bottom = 720.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="GameOver" type="TextureRect" parent="CameraFollowLayer/UI"]
+visible = false
+margin_left = 261.0
+margin_top = 281.0
+margin_right = 1018.0
+margin_bottom = 439.0
+texture = ExtResource( 6 )
+stretch_mode = 4
 [connection signal="dead" from="Player" to="." method="_on_Player_dead"]
 [connection signal="shoot" from="Player" to="." method="_on_Player_shoot"]
 [connection signal="sound" from="Player" to="." method="_on_Player_sound"]
