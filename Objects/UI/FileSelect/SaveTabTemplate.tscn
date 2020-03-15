@@ -1,8 +1,13 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scripts/UI/SaveTabTemplate.gd" type="Script" id=1]
 [ext_resource path="res://Objects/UI/FileSelect/SaveTabTemplateButtonSelect.tres" type="StyleBox" id=2]
 [ext_resource path="res://Objects/UI/FileSelect/SaveTabTemplateButtonPress.tres" type="StyleBox" id=3]
+[ext_resource path="res://Objects/UI/FileSelect/SaveTabTemplateButtonFocus.tres" type="StyleBox" id=4]
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 0, 0, 0.427451 )
+border_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -28,6 +33,7 @@ size_flags_vertical = 3
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "No Data"
 align = 1
+valign = 1
 
 [node name="Load" type="Button" parent="."]
 margin_top = 225.0
@@ -37,6 +43,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 2 )
 custom_styles/pressed = ExtResource( 3 )
+custom_styles/focus = ExtResource( 4 )
+custom_styles/disabled = SubResource( 3 )
 custom_styles/normal = SubResource( 1 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "Load"
@@ -49,6 +57,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 2 )
 custom_styles/pressed = ExtResource( 3 )
+custom_styles/focus = ExtResource( 4 )
 custom_styles/normal = SubResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "New"

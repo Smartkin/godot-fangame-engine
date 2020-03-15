@@ -22,9 +22,7 @@ frames = SubResource( 1 )
 frame = 1
 playing = true
 
-[node name="Hitbox" type="KinematicBody2D" parent="." groups=[
-"Killers",
-]]
+[node name="Hitbox" type="KinematicBody2D" parent="."]
 visible = false
 collision_layer = 8
 script = ExtResource( 4 )

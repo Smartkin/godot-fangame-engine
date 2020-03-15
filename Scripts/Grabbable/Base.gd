@@ -14,6 +14,7 @@ var slideSpeed: int setget ,getSlideSpeed
 
 func _ready() -> void:
 	set_physics_process(false)
+	add_to_group("Grabbables")
 
 func getType() -> int:
 	return type

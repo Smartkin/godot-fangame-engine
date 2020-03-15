@@ -1,6 +1,8 @@
 [gd_resource type="StyleBoxLine" format=2]
 
 [resource]
-color = Color( 0.117647, 0.247059, 0.329412, 0.745098 )
+color = Color( 0.431373, 1, 0, 1 )
+grow_begin = 0.0
+grow_end = 0.0
 thickness = 10
 vertical = true
