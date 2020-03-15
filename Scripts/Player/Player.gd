@@ -41,6 +41,7 @@ var canSave := false
 var inWater := false
 var hadDjump := false
 var jumpedInWater := false
+var onPlatform := false
 var platform: Node2D = null
 var savePoint: Node2D = null
 var faceDirection: int = DIRECTION.RIGHT
@@ -100,7 +101,8 @@ func _physics_process(delta: float) -> void:
 			applyGravity()
 	handleInputs() # Process player's current inputs
 	# Perform player movement but preserve only vertical momentum since we don't want any for horizontal
-	speed.y = move_and_slide_with_snap(speed, snap, gravDir, true, 4, MAX_SLOP_ANGLE).y
+	speed.y = move_and_slide_with_snap(speed, snap, gravDir, !onPlatform, 4, MAX_SLOP_ANGLE).y
+	onPlatform = false
 	for i in range(get_slide_count()): # Handle all the collisions that occured if needed
 		handleCollision(get_slide_collision(i))
 	# Handle current sprite depending on player's state
@@ -316,6 +318,8 @@ func handleInputs() -> void:
 func handleCollision(collision: KinematicCollision2D) -> void:
 	if (collision.collider.is_in_group("Killers")): # Check if we collided with a killer(spike, delfruit, etc.)
 		kill()
+	if (collision.collider.is_in_group("Platforms")):
+		onPlatform = true
 
 # Any necessary debug inputs like warping to mouse, saving anywhere, godmode, etc.
 func debugInputs() -> void:
