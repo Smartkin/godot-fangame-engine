@@ -35,7 +35,7 @@ var currentScene: Node = null
 var saveData := EMPTY_SAVE
 var sandboxedSaves := true # Whether saves are stored in user's APPDATA or along with exe file
 var saveFileName := "save"
-var windowCaption := "Godot Fangame Engine"
+var windowCaption: String = ProjectSettings.get_setting("application/config/name")
 
 func _ready() -> void:
 	print("World created")
@@ -84,7 +84,6 @@ func _process(delta):
 	if (gameStarted): # Add additional caption if game started
 		winCap += " -" + " Deaths: " + str(globalData.deaths)
 		winCap += " Time: " + getTimeStringFormatted(globalData.time)
-	winCap += " Objects: " + str(Performance.get_monitor(Performance.OBJECT_COUNT))
 	OS.set_window_title(winCap)
 
 func getGrav() -> bool:

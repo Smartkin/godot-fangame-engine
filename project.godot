@@ -500,7 +500,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Godot Test Engine"
+config/name="Godot Fangame Engine"
 run/main_scene="res://Rooms/Title.tscn"
 boot_splash/image="res://icon.png"
 boot_splash/fullsize=false
