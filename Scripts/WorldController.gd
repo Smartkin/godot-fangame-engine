@@ -1,11 +1,12 @@
 extends Node
 
 # Constants
-const SAVE_FILES := 3
-const SAVE_PASSWORD = "" # Save's encryption password
-const ENCRYPT_SAVES = false # Whether saves should be encrypted
-const TIME_FORMAT = "%02d:%02d:%02d.%03d" # Time format of 00:00:00.000
-const EMPTY_SAVE = { # Default save data when no save is present
+const SAVE_FILES := 3 # Amount of save slots
+const SAVE_PASSWORD := "" # Save's encryption password
+const SAVE_FILE_NAME := "save" # Save file's name
+const ENCRYPT_SAVES := false # Whether saves should be encrypted
+const TIME_FORMAT := "%02d:%02d:%02d.%03d" # Time format of 00:00:00.000
+const EMPTY_SAVE := { # Default save data when no save is present
 	"playerPosX": 0, # JSON doesn't support Vector2
 	"playerPosY": 0,
 	"deaths": 0,
@@ -25,23 +26,60 @@ var reverseGrav := false setget setGrav, getGrav # Whether gravity is currently 
 var saveSlot := 0 setget setSaveSlot, getSaveSlot # Currently played on save slot
 var gameStarted := false # Whether game has started
 var startNewGame := false # Whether new game has been started
+var musicToPlay := "" setget setMusic, getMusic # What music to play on scene change
 
 # Readonly
 var loadingSave := false setget , getLoadingSave
 var globalData := EMPTY_SAVE setget , getGlobalData
 
-# Private
+# Private, while Godot still allows to access members freely from the outside
+# these should never be accessed anywhere outside of this script
 var currentScene: Node = null
 var saveData := EMPTY_SAVE
 var sandboxedSaves := true # Whether saves are stored in user's APPDATA or along with exe file
-var saveFileName := "save"
 var windowCaption: String = ProjectSettings.get_setting("application/config/name")
+var musicFiles := {}
+var currentSong := ""
 
 func _ready() -> void:
 	print("World created")
+	var musicNode := AudioStreamPlayer.new()
+	musicNode.name = "MusicPlayer"
+	musicNode.bus = "Music"
+	add_child(musicNode)
 	assert(SAVE_FILES > 0)
 	get_tree().connect("tree_changed", self, "onTreeChange") # Tracks when scene finishes building
 	connect("tree_exiting", self, "onGameEnd")
+	loadMusic() # Load music
+
+# Loads all the music into memory for faster access later on
+func loadMusic() -> void:
+	var musicDir := Directory.new()
+	musicDir.open("res://Music")
+	musicDir.list_dir_begin(true)
+	var musicFile := musicDir.get_next()
+	while (musicFile != ""):
+		print(musicDir.get_current_dir() + "/" + musicFile)
+		if (musicFile.ends_with(".ogg")):
+			musicFiles[musicFile] = load(musicDir.get_current_dir() + "/" + musicFile)
+		musicFile = musicDir.get_next()
+
+func playMusic(fileName := "") -> void:
+	var musicPlayer := $MusicPlayer as AudioStreamPlayer
+	if (currentSong != fileName && fileName != ""):
+		musicPlayer.stream = musicFiles[fileName + ".ogg"]
+		musicPlayer.play()
+		currentSong = fileName
+	if (fileName == ""):
+		musicPlayer.stop()
+	if (musicToPlay != ""): # Reset music to play so it stops any music from playing when no music object is provided
+		musicToPlay = ""
+
+func getMusic() -> String:
+	return musicToPlay
+
+func setMusic(fileName: String) -> void:
+	musicToPlay = fileName
 
 func onGameEnd() -> void:
 	print("Game ended. World destroyed")
@@ -101,7 +139,7 @@ func getSaveSlot() -> int:
 	return saveSlot
 
 func getSavePath(slot: int) -> String:
-	return (saveFileName + String(slot)) if (!sandboxedSaves) else ("user://" + saveFileName + String(slot))
+	return (SAVE_FILE_NAME + String(slot)) if (!sandboxedSaves) else ("user://" + SAVE_FILE_NAME + String(slot))
 
 func setSaveSlot(slot: int) -> void:
 	if (slot >= 0 && slot < SAVE_FILES):
@@ -179,12 +217,13 @@ func callGroup(groupName: String, funcName: String) -> void:
 
 func onSceneFinished() -> void:
 	print("Scene finished building")
+	playMusic(musicToPlay)
 	if (startNewGame):
 		globalData = EMPTY_SAVE
 		saveGame()
 		startNewGame = false
-	# Tell objects that are saved in any manner that the scene finished building
+	# Tell objects that are in the saved group that the scene finished building
 	callGroup("Saved", "sceneBuilt")
-	if (reverseGrav): # Reverse gravity of all objects that need it
+	if (reverseGrav): # Reverse gravity of all objects that need to
 		callGroup("GravityAffected", "reverseGravity")
 	loadingSave = false

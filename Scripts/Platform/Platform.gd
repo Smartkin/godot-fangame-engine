@@ -21,6 +21,10 @@ func _ready() -> void:
 	else:
 		($CollisionChecker as KinematicBody2D).disconnect("block_collision", self, "on_block_collision")
 
+func _physics_process(delta):
+	if (!bounce):
+		position += speed * delta
+
 func handle_collision(collider: Node2D, normal: Vector2) -> void:
 	if (collider.is_in_group("Solids")):
 		speed = speed.bounce(normal)

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Sprites/sprPlayMusic_0.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/MusicPlayer.gd" type="Script" id=2]
+
+[node name="MusicPlayer" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 16, 16 )
+texture = ExtResource( 1 )

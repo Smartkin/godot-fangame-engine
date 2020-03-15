@@ -5,7 +5,7 @@ var bullet := preload("res://Objects/Player/Bullet.tscn")
 
 var playerDead := false
 
-# Callback from WorldController when a finish is changed and finishes being built
+# Callback from WorldController when scene is changed and finishes being built
 func sceneBuilt() -> void:
 	if (WorldController.loadingSave):
 		position.x = WorldController.saveData.playerPosX
