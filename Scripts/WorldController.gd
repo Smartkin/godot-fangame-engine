@@ -2,7 +2,7 @@ extends Node
 
 # Constants
 const SAVE_FILES := 3 # Amount of save slots
-const SAVE_PASSWORD := "" # Save's encryption password
+const SAVE_PASSWORD := "Change me!" # Save's encryption password
 const SAVE_FILE_NAME := "save" # Save file's name
 const ENCRYPT_SAVES := false # Whether saves should be encrypted
 const TIME_FORMAT := "%02d:%02d:%02d.%03d" # Time format of 00:00:00.000
@@ -38,6 +38,7 @@ var currentScene: Node = null
 var saveData := EMPTY_SAVE
 var sandboxedSaves := true # Whether saves are stored in user's APPDATA or along with exe file
 var windowCaption: String = ProjectSettings.get_setting("application/config/name")
+var prevWinCap := ""
 var musicFiles := {}
 var currentSong := ""
 
@@ -86,7 +87,7 @@ func onGameEnd() -> void:
 	if (gameStarted):
 		saveToFile() # Save death/time
 
-func getTimeStringFormatted(timeJson: Dictionary):
+func getTimeStringFormatted(timeJson: Dictionary) -> String:
 	return TIME_FORMAT % [timeJson.hours, timeJson.minutes, timeJson.seconds, timeJson.milliseconds]
 
 func _input(event: InputEvent) -> void:
@@ -121,8 +122,12 @@ func _process(delta):
 	var winCap = windowCaption
 	if (gameStarted): # Add additional caption if game started
 		winCap += " -" + " Deaths: " + str(globalData.deaths)
-		winCap += " Time: " + getTimeStringFormatted(globalData.time)
-	OS.set_window_title(winCap)
+		winCap += " Time: " + getTimeStringFormatted(globalData.time).substr(0, 8)
+	# We only want to change title when it actually changed
+	# OS calls are quite taxing on performance
+	if (winCap != prevWinCap):
+		OS.set_window_title(winCap)
+		prevWinCap = winCap
 
 func getGrav() -> bool:
 	if (loadingSave):

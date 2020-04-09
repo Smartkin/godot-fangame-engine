@@ -4,3 +4,5 @@
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 border_width_left = 30
 border_blend = true
+shadow_color = Color( 0, 0, 0, 0.47451 )
+shadow_size = 1

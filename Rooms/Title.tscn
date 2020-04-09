@@ -1,39 +1,82 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Fonts/ABeeZee-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Scripts/Title/Title.gd" type="Script" id=2]
+[ext_resource path="res://Objects/MusicPlayer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/UI/ButtonNormal.tres" type="StyleBox" id=3]
+[ext_resource path="res://Objects/UI/MenuTheme.tres" type="Theme" id=4]
+[ext_resource path="res://Objects/UI/ButtonFocus.tres" type="StyleBox" id=5]
+[ext_resource path="res://Objects/UI/ButtonPress.tres" type="StyleBox" id=6]
+[ext_resource path="res://Objects/UI/ButtonDisabled.tres" type="StyleBox" id=7]
+[ext_resource path="res://Objects/UI/Title/Title.gd" type="Script" id=8]
+[ext_resource path="res://Objects/UI/Title/EngineName.gd" type="Script" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 128
-outline_size = 4
+outline_size = 5
 outline_color = Color( 0, 0, 0, 1 )
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="Theme" id=2]
-default_font = SubResource( 1 )
+[sub_resource type="StyleBoxEmpty" id=3]
 
-[node name="TitleScreen" type="Control"]
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[node name="Title" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = SubResource( 2 )
-script = ExtResource( 2 )
+theme = ExtResource( 4 )
+script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="Layout" type="VBoxContainer" parent="."]
 margin_right = 1280.0
 margin_bottom = 720.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Title" type="Label" parent="CenterContainer"]
-margin_left = 181.0
-margin_top = 284.0
-margin_right = 1099.0
-margin_bottom = 436.0
-text = "GODOT ENGINE"
-align = 3
-valign = 3
+[node name="EngineName" type="Label" parent="Layout"]
+margin_right = 1280.0
+margin_bottom = 356.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+text = "Godot Engine"
+align = 1
+valign = 1
+script = ExtResource( 9 )
+
+[node name="StartGame" type="Button" parent="Layout"]
+margin_top = 360.0
+margin_right = 1280.0
+margin_bottom = 538.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+custom_styles/hover = ExtResource( 5 )
+custom_styles/pressed = ExtResource( 6 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/disabled = ExtResource( 7 )
+custom_styles/normal = ExtResource( 3 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Start Game"
+
+[node name="Options" type="Button" parent="Layout"]
+margin_top = 542.0
+margin_right = 1280.0
+margin_bottom = 720.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+custom_styles/hover = ExtResource( 5 )
+custom_styles/pressed = ExtResource( 6 )
+custom_styles/focus = SubResource( 2 )
+custom_styles/disabled = ExtResource( 7 )
+custom_styles/normal = ExtResource( 3 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Options"
+
+[node name="MusicPlayer" parent="." instance=ExtResource( 2 )]
+position = Vector2( 35.3593, 21.3891 )
+music = "GuyRock"
+[connection signal="pressed" from="Layout/StartGame" to="." method="_on_StartGame_pressed"]
