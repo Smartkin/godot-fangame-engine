@@ -19,3 +19,6 @@ If you are making an issue, please make a good description as to what exactly yo
 
 # Code style
 When you contribute something by yourself please keep the code style used throughout the engine, that includes using brackets in if statements, not using semicolons(;) at the end of statements, using camelCase for function and variable names, use [static typing](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/static_typing.html) only
+
+# Contact
+* Discord: Smartkin#7777
