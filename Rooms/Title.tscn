@@ -7,8 +7,9 @@
 [ext_resource path="res://Objects/UI/ButtonFocus.tres" type="StyleBox" id=5]
 [ext_resource path="res://Objects/UI/ButtonPress.tres" type="StyleBox" id=6]
 [ext_resource path="res://Objects/UI/ButtonDisabled.tres" type="StyleBox" id=7]
-[ext_resource path="res://Objects/UI/Title/Title.gd" type="Script" id=8]
-[ext_resource path="res://Objects/UI/Title/EngineName.gd" type="Script" id=9]
+[ext_resource path="res://Scripts/UI/Title/Title.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/UI/Title/EngineName.gd" type="Script" id=9]
+
 
 [sub_resource type="DynamicFont" id=1]
 size = 128
@@ -39,7 +40,7 @@ __meta__ = {
 
 [node name="EngineName" type="Label" parent="Layout"]
 margin_right = 1280.0
-margin_bottom = 356.0
+margin_bottom = 283.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
@@ -49,9 +50,9 @@ valign = 1
 script = ExtResource( 9 )
 
 [node name="StartGame" type="Button" parent="Layout"]
-margin_top = 360.0
+margin_top = 287.0
 margin_right = 1280.0
-margin_bottom = 538.0
+margin_bottom = 428.0
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 custom_styles/hover = ExtResource( 5 )
@@ -63,9 +64,9 @@ custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "Start Game"
 
 [node name="Options" type="Button" parent="Layout"]
-margin_top = 542.0
+margin_top = 432.0
 margin_right = 1280.0
-margin_bottom = 720.0
+margin_bottom = 573.0
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 custom_styles/hover = ExtResource( 5 )
@@ -76,7 +77,23 @@ custom_styles/normal = ExtResource( 3 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "Options"
 
+[node name="Exit" type="Button" parent="Layout"]
+margin_top = 577.0
+margin_right = 1280.0
+margin_bottom = 720.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+custom_styles/hover = ExtResource( 5 )
+custom_styles/pressed = ExtResource( 6 )
+custom_styles/focus = SubResource( 2 )
+custom_styles/disabled = ExtResource( 7 )
+custom_styles/normal = ExtResource( 3 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Exit"
+
 [node name="MusicPlayer" parent="." instance=ExtResource( 2 )]
 position = Vector2( 35.3593, 21.3891 )
 music = "GuyRock"
 [connection signal="pressed" from="Layout/StartGame" to="." method="_on_StartGame_pressed"]
+[connection signal="pressed" from="Layout/Options" to="." method="_on_Options_pressed"]
+[connection signal="pressed" from="Layout/Exit" to="." method="_on_Exit_pressed"]

@@ -1,0 +1,680 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://Objects/MusicPlayer.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Objects/UI/ButtonNormal.tres" type="StyleBox" id=2]
+[ext_resource path="res://Objects/UI/MenuTheme.tres" type="Theme" id=3]
+[ext_resource path="res://Objects/UI/ButtonFocus.tres" type="StyleBox" id=4]
+[ext_resource path="res://Objects/UI/ButtonPress.tres" type="StyleBox" id=5]
+[ext_resource path="res://Objects/UI/ButtonDisabled.tres" type="StyleBox" id=6]
+[ext_resource path="res://Scripts/UI/Options/Options.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/UI/Options/ControlsKeyPopup.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/UI/Options/ControlBindButton.gd" type="Script" id=9]
+[ext_resource path="res://Scripts/UI/ControllerSelect.gd" type="Script" id=10]
+
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=7]
+
+[sub_resource type="StyleBoxEmpty" id=8]
+
+[sub_resource type="StyleBoxEmpty" id=9]
+
+[node name="Options" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 3 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Center" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = 6.10352e-05
+rect_rotation = 0.00251688
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ChangeControlPopup" type="PopupDialog" parent="Center"]
+margin_left = 390.0
+margin_top = 110.0
+margin_right = 890.0
+margin_bottom = 610.0
+rect_min_size = Vector2( 500, 500 )
+popup_exclusive = true
+script = ExtResource( 8 )
+
+[node name="CenterContainer" type="CenterContainer" parent="Center/ChangeControlPopup"]
+margin_right = 500.0
+margin_bottom = 500.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Center/ChangeControlPopup/CenterContainer"]
+margin_left = 106.0
+margin_top = 230.0
+margin_right = 393.0
+margin_bottom = 269.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "Press any button..."
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionsTabs" type="TabContainer" parent="."]
+margin_top = 50.0
+margin_right = 1280.0
+margin_bottom = 670.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/tab_fg = SubResource( 3 )
+custom_styles/tab_disabled = SubResource( 4 )
+custom_styles/tab_bg = SubResource( 5 )
+custom_styles/panel = SubResource( 6 )
+tabs_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainOptionsTab" type="VBoxContainer" parent="OptionsTabs"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MusicCheckbox" type="CheckButton" parent="OptionsTabs/MainOptionsTab"]
+margin_right = 1280.0
+margin_bottom = 58.0
+hint_tooltip = "Turn music on/off"
+size_flags_vertical = 3
+custom_colors/font_color_hover_pressed = Color( 0, 0.992157, 0.827451, 0.490196 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+shortcut_in_tooltip = false
+pressed = true
+text = "Music"
+expand_icon = true
+
+[node name="MasterVolume" type="Label" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 62.0
+margin_right = 1280.0
+margin_bottom = 120.0
+hint_tooltip = "General game volume"
+mouse_filter = 1
+size_flags_vertical = 7
+text = "Master volume"
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MasterVolumeSlider" type="HSlider" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 124.0
+margin_right = 1280.0
+margin_bottom = 140.0
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicVolume" type="Label" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 144.0
+margin_right = 1280.0
+margin_bottom = 202.0
+size_flags_vertical = 7
+text = "Music volume"
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MusicVolumeSlider" type="HSlider" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 206.0
+margin_right = 1280.0
+margin_bottom = 222.0
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SfxVolume" type="Label" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 226.0
+margin_right = 1280.0
+margin_bottom = 284.0
+size_flags_vertical = 7
+text = "Sound effects volume"
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SfxVolumeSlider" type="HSlider" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 288.0
+margin_right = 1280.0
+margin_bottom = 304.0
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="FullscreenCheckbox" type="CheckButton" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 308.0
+margin_right = 1280.0
+margin_bottom = 366.0
+hint_tooltip = "Display game in fullscreen"
+size_flags_vertical = 3
+custom_colors/font_color_hover_pressed = Color( 0, 0.992157, 0.827451, 0.490196 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Fullscreen"
+expand_icon = true
+
+[node name="BorderlessCheckbox" type="CheckButton" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 370.0
+margin_right = 1280.0
+margin_bottom = 428.0
+hint_tooltip = "Display game window without any borders"
+size_flags_vertical = 3
+custom_colors/font_color_hover_pressed = Color( 0, 0.992157, 0.827451, 0.490196 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Borderless"
+
+[node name="VsyncCheckbox" type="CheckButton" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 432.0
+margin_right = 1280.0
+margin_bottom = 490.0
+hint_tooltip = "Turns on vertical syncronization.
+Helps removing tearing when playing."
+size_flags_vertical = 3
+custom_colors/font_color_hover_pressed = Color( 0, 0.992157, 0.827451, 0.490196 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Vsync"
+
+[node name="KeyboardSettings" type="Button" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 494.0
+margin_right = 1280.0
+margin_bottom = 552.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Keyboard settings"
+align = 0
+
+[node name="ControllerSettings" type="Button" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 556.0
+margin_right = 1280.0
+margin_bottom = 620.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 2 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Controller settings"
+align = 0
+
+[node name="KeyboardOptionsTab" type="VBoxContainer" parent="OptionsTabs"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Left" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_right = 1280.0
+margin_bottom = 48.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Left"
+align = 0
+script = ExtResource( 9 )
+
+[node name="Right" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 52.0
+margin_right = 1280.0
+margin_bottom = 100.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Right"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_right"
+
+[node name="Up" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 104.0
+margin_right = 1280.0
+margin_bottom = 152.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Up"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_up"
+
+[node name="Down" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 156.0
+margin_right = 1280.0
+margin_bottom = 204.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Down"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_down"
+
+[node name="Jump" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 208.0
+margin_right = 1280.0
+margin_bottom = 256.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Jump"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_jump"
+
+[node name="Shoot" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 260.0
+margin_right = 1280.0
+margin_bottom = 308.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Shoot"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_shoot"
+
+[node name="Restart" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 312.0
+margin_right = 1280.0
+margin_bottom = 360.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Restart"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_restart"
+
+[node name="Skip" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 364.0
+margin_right = 1280.0
+margin_bottom = 412.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Skip"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_skip"
+
+[node name="Suicide" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 416.0
+margin_right = 1280.0
+margin_bottom = 464.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Suicide"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_suicide"
+
+[node name="Pause" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 468.0
+margin_right = 1280.0
+margin_bottom = 516.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Pause"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_pause"
+
+[node name="ResetControls" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 520.0
+margin_right = 1280.0
+margin_bottom = 568.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 8 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Reset controls"
+align = 0
+
+[node name="BackKeyboard" type="Button" parent="OptionsTabs/KeyboardOptionsTab"]
+margin_top = 572.0
+margin_right = 1280.0
+margin_bottom = 620.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 8 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Back"
+align = 0
+
+[node name="ControllerOptionsTab" type="VBoxContainer" parent="OptionsTabs"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Controller" type="OptionButton" parent="OptionsTabs/ControllerOptionsTab"]
+margin_right = 1280.0
+margin_bottom = 39.0
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 9 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+text = "Controller"
+script = ExtResource( 10 )
+
+[node name="Left" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 43.0
+margin_right = 1280.0
+margin_bottom = 87.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Left"
+align = 0
+script = ExtResource( 9 )
+
+[node name="Right" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 91.0
+margin_right = 1280.0
+margin_bottom = 135.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Right"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_right"
+
+[node name="Up" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 139.0
+margin_right = 1280.0
+margin_bottom = 183.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Up"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_up"
+
+[node name="Down" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 187.0
+margin_right = 1280.0
+margin_bottom = 231.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Down"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_down"
+
+[node name="Jump" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 235.0
+margin_right = 1280.0
+margin_bottom = 279.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Jump"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_jump"
+
+[node name="Shoot" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 283.0
+margin_right = 1280.0
+margin_bottom = 327.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Shoot"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_shoot"
+
+[node name="Restart" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 331.0
+margin_right = 1280.0
+margin_bottom = 375.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Restart"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_restart"
+
+[node name="Skip" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 379.0
+margin_right = 1280.0
+margin_bottom = 423.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Skip"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_skip"
+
+[node name="Suicide" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 427.0
+margin_right = 1280.0
+margin_bottom = 471.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Suicide"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_suicide"
+
+[node name="Pause" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 475.0
+margin_right = 1280.0
+margin_bottom = 519.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 7 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Pause"
+align = 0
+script = ExtResource( 9 )
+bind = "pl_pause"
+
+[node name="ResetControls" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 523.0
+margin_right = 1280.0
+margin_bottom = 567.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 8 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Reset controls"
+align = 0
+
+[node name="BackKeyboard" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
+margin_top = 571.0
+margin_right = 1280.0
+margin_bottom = 620.0
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 8 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Back"
+align = 0
+
+[node name="MusicPlayer" parent="." instance=ExtResource( 1 )]
+position = Vector2( 11.7368, 10.6315 )
+music = "GuyRock"
+[connection signal="controlKeyInput" from="Center/ChangeControlPopup" to="." method="_on_Popup_controlKeyInput"]
+[connection signal="pressed" from="OptionsTabs/MainOptionsTab/KeyboardSettings" to="." method="_on_KeyboardSettings_pressed"]
+[connection signal="pressed" from="OptionsTabs/MainOptionsTab/ControllerSettings" to="." method="_on_ControllerSettings_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Left" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Left" to="OptionsTabs/KeyboardOptionsTab/Left" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Right" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Right" to="OptionsTabs/KeyboardOptionsTab/Right" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Up" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Up" to="OptionsTabs/KeyboardOptionsTab/Up" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Down" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Down" to="OptionsTabs/KeyboardOptionsTab/Down" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Jump" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Jump" to="OptionsTabs/KeyboardOptionsTab/Jump" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Shoot" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Shoot" to="OptionsTabs/KeyboardOptionsTab/Shoot" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Restart" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Restart" to="OptionsTabs/KeyboardOptionsTab/Restart" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Skip" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Skip" to="OptionsTabs/KeyboardOptionsTab/Skip" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Suicide" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Suicide" to="OptionsTabs/KeyboardOptionsTab/Suicide" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Pause" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Pause" to="OptionsTabs/KeyboardOptionsTab/Pause" method="_on_KeyBind_pressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/BackKeyboard" to="." method="_on_BackKeyboard_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Left" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Left" to="OptionsTabs/ControllerOptionsTab/Left" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Right" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Right" to="OptionsTabs/ControllerOptionsTab/Right" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Up" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Up" to="OptionsTabs/ControllerOptionsTab/Up" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Down" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Down" to="OptionsTabs/ControllerOptionsTab/Down" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Jump" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Jump" to="OptionsTabs/ControllerOptionsTab/Jump" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Shoot" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Shoot" to="OptionsTabs/ControllerOptionsTab/Shoot" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Restart" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Restart" to="OptionsTabs/ControllerOptionsTab/Restart" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Skip" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Skip" to="OptionsTabs/ControllerOptionsTab/Skip" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Suicide" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Suicide" to="OptionsTabs/ControllerOptionsTab/Suicide" method="_on_KeyBind_pressed"]
+[connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Pause" to="." method="_on_BindButton_keyBindPressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Pause" to="OptionsTabs/ControllerOptionsTab/Pause" method="_on_KeyBind_pressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/BackKeyboard" to="." method="_on_BackKeyboard_pressed"]

@@ -4,8 +4,10 @@ extends Node
 const SAVE_FILES := 3 # Amount of save slots
 const SAVE_PASSWORD := "Change me!" # Save's encryption password
 const SAVE_FILE_NAME := "save" # Save file's name
+const CONFIG_FILE_NAME := "config.cfg" # Config's file name
 const ENCRYPT_SAVES := false # Whether saves should be encrypted
 const TIME_FORMAT := "%02d:%02d:%02d.%03d" # Time format of 00:00:00.000
+const SANDBOXED_SAVES := true # Whether saves are stored in user's APPDATA or along with exe file
 const EMPTY_SAVE := { # Default save data when no save is present
 	"playerPosX": 0, # JSON doesn't support Vector2
 	"playerPosY": 0,
@@ -19,6 +21,39 @@ const EMPTY_SAVE := { # Default save data when no save is present
 	"scene": "res://TestBed.tscn",
 	"sceneName": "TestBed",
 	"reverseGrav": false
+}
+const DEFAULT_CONFIG := { # Default config when user starts the game
+	"music": true,
+	"volume_level_master": 1.0,
+	"volume_level_music": 1.0,
+	"volume_level_sfx": 1.0,
+	"fullscreen": false,
+	"borderless": false,
+	"vsync": false,
+	"keyboard_controls": {
+		"left": KEY_LEFT,
+		"right": KEY_RIGHT,
+		"up": KEY_UP,
+		"down": KEY_DOWN,
+		"jump": KEY_SHIFT,
+		"shoot": ord("Z"),
+		"restart": ord("R"),
+		"skip": ord("S"),
+		"suicide": ord("Q"),
+		"pause": ord("P")
+	},
+	"controller_controls": {
+		"left": JOY_DPAD_LEFT,
+		"right": JOY_DPAD_RIGHT,
+		"up": JOY_DPAD_UP,
+		"down": JOY_DPAD_DOWN,
+		"jump": JOY_DS_A,
+		"shoot": JOY_DS_X,
+		"restart": JOY_DS_B,
+		"skip": JOY_DS_Y,
+		"suicide": JOY_SELECT,
+		"pause": JOY_START
+	}
 }
 
 # Public members
@@ -36,7 +71,6 @@ var globalData := EMPTY_SAVE setget , getGlobalData
 # these should never be accessed anywhere outside of this script
 var currentScene: Node = null
 var saveData := EMPTY_SAVE
-var sandboxedSaves := true # Whether saves are stored in user's APPDATA or along with exe file
 var windowCaption: String = ProjectSettings.get_setting("application/config/name")
 var prevWinCap := ""
 var musicFiles := {}
@@ -144,7 +178,10 @@ func getSaveSlot() -> int:
 	return saveSlot
 
 func getSavePath(slot: int) -> String:
-	return (SAVE_FILE_NAME + String(slot)) if (!sandboxedSaves) else ("user://" + SAVE_FILE_NAME + String(slot))
+	return (SAVE_FILE_NAME + String(slot)) if (!SANDBOXED_SAVES) else ("user://" + SAVE_FILE_NAME + String(slot))
+
+func getConfigPath() -> String:
+	return (CONFIG_FILE_NAME) if (!SANDBOXED_SAVES) else ("user://" + CONFIG_FILE_NAME)
 
 func setSaveSlot(slot: int) -> void:
 	if (slot >= 0 && slot < SAVE_FILES):
@@ -152,6 +189,12 @@ func setSaveSlot(slot: int) -> void:
 
 func getLoadingSave() -> bool:
 	return loadingSave
+
+func saveConfig() -> void:
+	pass
+
+func loadConfig() -> void:
+	pass
 
 func saveGame() -> void:
 	var tree := get_tree()
