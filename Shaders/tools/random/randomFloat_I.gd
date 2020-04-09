@@ -12,8 +12,8 @@ func _get_name() -> String:
 func _get_category() -> String:
 	return "Tools"
 
-#func _get_subcategory():
-#	return ""
+func _get_subcategory() -> String:
+	return "Random"
 
 func _get_description() -> String:
 	return "Improved version of classic random function. Classic random can produce artifacts. This one - doesn't."
