@@ -241,13 +241,13 @@ func slideOnGrab(direction: int = 0) -> String:
 			$Sprite.position = Vector2(vineSlideOffset.x, vineSlideOffset.y if !WorldController.reverseGrav else -vineSlideOffset.y)
 			$Sprite.flip_h = false
 			speed.y = slideSpeed if !WorldController.reverseGrav else -slideSpeed
-			neededAction = "pl_right"
+			neededAction = "right"
 		GrabbableBase.TYPE.RIGHT:
 			$Sprite.play("VineSlide")
 			$Sprite.position = Vector2(-vineSlideOffset.x, vineSlideOffset.y if !WorldController.reverseGrav else -vineSlideOffset.y)
 			$Sprite.flip_h = true
 			speed.y = slideSpeed if !WorldController.reverseGrav else -slideSpeed
-			neededAction = "pl_left"
+			neededAction = "left"
 	return neededAction
 
 # Reverse player's gravity
@@ -284,10 +284,10 @@ func absi(a: int) -> int:
 func handleInputs() -> void:
 	# Handle player run
 	var direction: int = DIRECTION.IDLE
-	var action := "pl_right"
-	if (Input.is_action_pressed("pl_right")):
+	var action := "right"
+	if (Input.is_action_pressed("right")):
 		direction = DIRECTION.RIGHT
-	elif (Input.is_action_pressed("pl_left")):
+	elif (Input.is_action_pressed("left")):
 		direction = DIRECTION.LEFT
 	# Check for player state
 	match curState:
@@ -297,17 +297,17 @@ func handleInputs() -> void:
 			run(direction)
 			action = slideOnGrab(direction)
 	# Handle player jump
-	var jumpFromVine: bool = (Input.is_action_pressed("pl_jump") && Input.is_action_just_pressed(action) && curState == STATE.GRAB)
-	if (Input.is_action_just_pressed("pl_jump") || jumpFromVine):
+	var jumpFromVine: bool = (Input.is_action_pressed("jump") && Input.is_action_just_pressed(action) && curState == STATE.GRAB)
+	if (Input.is_action_just_pressed("jump") || jumpFromVine):
 		jumpBuffer = MAX_JUMP_BUFFER
 	if (jumpBuffer > 0):
 		jumpBuffer = jump(jumpBuffer)
 		print(speed)
 	# Handle player jump release
-	if (Input.is_action_just_released("pl_jump") && !getFalling()):
+	if (Input.is_action_just_released("jump") && !getFalling()):
 		cutJump()
 	# Handle player shooting
-	if (Input.is_action_just_pressed("pl_shoot")):
+	if (Input.is_action_just_pressed("shoot")):
 		if (canSave): # Check if we are standing in a save point
 			WorldController.saveGame()
 			savePoint.save()

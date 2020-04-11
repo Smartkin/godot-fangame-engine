@@ -48,10 +48,10 @@ const DEFAULT_CONFIG := { # Default config when user starts the game
 		"right": JOY_DPAD_RIGHT,
 		"up": JOY_DPAD_UP,
 		"down": JOY_DPAD_DOWN,
-		"jump": JOY_DS_A,
-		"shoot": JOY_DS_X,
-		"restart": JOY_DS_B,
-		"skip": JOY_DS_Y,
+		"jump": JOY_SONY_X,
+		"shoot": JOY_SONY_SQUARE,
+		"restart": JOY_SONY_TRIANGLE,
+		"skip": JOY_SONY_CIRCLE,
 		"suicide": JOY_SELECT,
 		"pause": JOY_START
 	}
@@ -134,7 +134,7 @@ func getTimeStringFormatted(timeJson: Dictionary) -> String:
 	return TIME_FORMAT % [timeJson.hours, timeJson.minutes, timeJson.seconds, timeJson.milliseconds]
 
 func _input(event: InputEvent) -> void:
-	if (event.is_action_pressed("pl_reset") && gameStarted):
+	if (event.is_action_pressed("restart") && gameStarted):
 		loadGame()
 	if (Input.is_key_pressed(KEY_F2)):
 		restartGame()
@@ -278,6 +278,17 @@ func applyConfig() -> void:
 	setVolume("Master", currentConfig.volume_master)
 	setVolume("Music", currentConfig.volume_music)
 	setVolume("Sfx", currentConfig.volume_sfx)
+	# Add keyboard binds
+	for keyboard_control in currentConfig.keyboard_controls:
+		var ev := InputEventKey.new()
+		ev.scancode = currentConfig.keyboard_controls[keyboard_control]
+		InputMap.action_add_event(keyboard_control, ev)
+	# Add controller binds
+	for controller_controls in currentConfig.controller_controls:
+		var ev := InputEventJoypadButton.new()
+		ev.button_index = currentConfig.controller_controls[controller_controls]
+		ev.pressed = true
+		InputMap.action_add_event(controller_controls, ev)
 
 func saveGame() -> void:
 	var tree := get_tree()

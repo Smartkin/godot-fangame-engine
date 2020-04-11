@@ -91,3 +91,8 @@ func _on_SfxVolumeSlider_value_changed(value):
 	$SfxVolume.text = "Sound Effects Volume " + str(value * 100) + "%"
 	WorldController.currentConfig.volume_sfx = value
 	WorldController.setVolume("Sfx", value)
+
+
+func _on_BackKeyboard_pressed():
+	$MusicCheckbox.grab_focus()
+	get_parent().current_tab = 0
