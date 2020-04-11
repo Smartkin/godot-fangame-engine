@@ -22,3 +22,12 @@ func _on_BindButton_keyBindPressed(bind: String) -> void:
 
 func _on_BackKeyboard_pressed() -> void:
 	$OptionsTabs.current_tab = 0
+
+
+func _on_Button_pressed():
+	WorldController.saveConfig()
+	get_tree().change_scene("res://Rooms/Title.tscn")
+
+
+func _on_MasterVolumeSlider_exited():
+	pass # Replace with function body.

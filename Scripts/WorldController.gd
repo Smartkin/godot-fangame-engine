@@ -24,9 +24,9 @@ const EMPTY_SAVE := { # Default save data when no save is present
 }
 const DEFAULT_CONFIG := { # Default config when user starts the game
 	"music": true,
-	"volume_level_master": 1.0,
-	"volume_level_music": 1.0,
-	"volume_level_sfx": 1.0,
+	"volume_master": 1.0,
+	"volume_music": 0.5,
+	"volume_sfx": 0.5,
 	"fullscreen": false,
 	"borderless": false,
 	"vsync": false,
@@ -43,6 +43,7 @@ const DEFAULT_CONFIG := { # Default config when user starts the game
 		"pause": ord("P")
 	},
 	"controller_controls": {
+		"controller": -1,
 		"left": JOY_DPAD_LEFT,
 		"right": JOY_DPAD_RIGHT,
 		"up": JOY_DPAD_UP,
@@ -66,6 +67,7 @@ var musicToPlay := "" setget setMusic, getMusic # What music to play on scene ch
 # Readonly
 var loadingSave := false setget , getLoadingSave
 var globalData := EMPTY_SAVE setget , getGlobalData
+var currentConfig := DEFAULT_CONFIG setget , getCurrentConfig
 
 # Private, while Godot still allows to access members freely from the outside
 # these should never be accessed anywhere outside of this script
@@ -86,6 +88,7 @@ func _ready() -> void:
 	get_tree().connect("tree_changed", self, "onTreeChange") # Tracks when scene finishes building
 	connect("tree_exiting", self, "onGameEnd")
 	loadMusic() # Load music
+	loadConfig() # Load user's configuration
 
 # Loads all the music into memory for faster access later on
 func loadMusic() -> void:
@@ -100,15 +103,21 @@ func loadMusic() -> void:
 		musicFile = musicDir.get_next()
 
 func playMusic(fileName := "") -> void:
+	if (currentConfig.music):
+		var musicPlayer := $MusicPlayer as AudioStreamPlayer
+		if (currentSong != fileName && fileName != ""):
+			musicPlayer.stream = musicFiles[fileName + ".ogg"]
+			musicPlayer.play()
+			currentSong = fileName
+		if (fileName == ""):
+			musicPlayer.stop()
+		if (musicToPlay != ""): # Reset music to play so it stops any music from playing when no music object is provided
+			musicToPlay = ""
+
+func stopMusic():
 	var musicPlayer := $MusicPlayer as AudioStreamPlayer
-	if (currentSong != fileName && fileName != ""):
-		musicPlayer.stream = musicFiles[fileName + ".ogg"]
-		musicPlayer.play()
-		currentSong = fileName
-	if (fileName == ""):
-		musicPlayer.stop()
-	if (musicToPlay != ""): # Reset music to play so it stops any music from playing when no music object is provided
-		musicToPlay = ""
+	currentSong = ""
+	musicPlayer.stop()
 
 func getMusic() -> String:
 	return musicToPlay
@@ -183,6 +192,9 @@ func getSavePath(slot: int) -> String:
 func getConfigPath() -> String:
 	return (CONFIG_FILE_NAME) if (!SANDBOXED_SAVES) else ("user://" + CONFIG_FILE_NAME)
 
+func getCurrentConfig() -> Dictionary:
+	return currentConfig
+
 func setSaveSlot(slot: int) -> void:
 	if (slot >= 0 && slot < SAVE_FILES):
 		saveSlot = slot
@@ -191,10 +203,81 @@ func getLoadingSave() -> bool:
 	return loadingSave
 
 func saveConfig() -> void:
-	pass
+	var config := ConfigFile.new()
+	config.set_value("General", "music", currentConfig.music)
+	config.set_value("General", "volume_master", currentConfig.volume_master)
+	config.set_value("General", "volume_music", currentConfig.volume_music)
+	config.set_value("General", "volume_sfx", currentConfig.volume_sfx)
+	config.set_value("General", "fullscreen", currentConfig.fullscreen)
+	config.set_value("General", "borderless", currentConfig.borderless)
+	config.set_value("General", "vsync", currentConfig.vsync)
+	config.set_value("keyboard", "left", currentConfig.keyboard_controls.left)
+	config.set_value("keyboard", "right", currentConfig.keyboard_controls.right)
+	config.set_value("keyboard", "up", currentConfig.keyboard_controls.up)
+	config.set_value("keyboard", "down", currentConfig.keyboard_controls.down)
+	config.set_value("keyboard", "jump", currentConfig.keyboard_controls.jump)
+	config.set_value("keyboard", "shoot", currentConfig.keyboard_controls.shoot)
+	config.set_value("keyboard", "restart", currentConfig.keyboard_controls.restart)
+	config.set_value("keyboard", "skip", currentConfig.keyboard_controls.skip)
+	config.set_value("keyboard", "suicide", currentConfig.keyboard_controls.suicide)
+	config.set_value("keyboard", "pause", currentConfig.keyboard_controls.pause)
+	config.set_value("controller", "controller", currentConfig.controller_controls.controller)
+	config.set_value("controller", "left", currentConfig.controller_controls.left)
+	config.set_value("controller", "right", currentConfig.controller_controls.right)
+	config.set_value("controller", "up", currentConfig.controller_controls.up)
+	config.set_value("controller", "down", currentConfig.controller_controls.down)
+	config.set_value("controller", "jump", currentConfig.controller_controls.jump)
+	config.set_value("controller", "shoot", currentConfig.controller_controls.shoot)
+	config.set_value("controller", "restart", currentConfig.controller_controls.restart)
+	config.set_value("controller", "skip", currentConfig.controller_controls.skip)
+	config.set_value("controller", "suicide", currentConfig.controller_controls.suicide)
+	config.set_value("controller", "pause", currentConfig.controller_controls.pause)
+	config.save(getConfigPath())
 
 func loadConfig() -> void:
-	pass
+	var config := ConfigFile.new()
+	var err := config.load(getConfigPath())
+	if err != OK:
+		saveConfig()
+		loadConfig()
+	else:
+		currentConfig.music = config.get_value("General", "music", DEFAULT_CONFIG.music)
+		currentConfig.volume_master = config.get_value("General", "volume_master", DEFAULT_CONFIG.volume_master)
+		currentConfig.volume_music = config.get_value("General", "volume_music", DEFAULT_CONFIG.volume_music)
+		currentConfig.volume_sfx = config.get_value("General", "volume_sfx", DEFAULT_CONFIG.volume_sfx)
+		currentConfig.fullscreen = config.get_value("General", "fullscreen", DEFAULT_CONFIG.fullscreen)
+		currentConfig.borderless = config.get_value("General", "borderless", DEFAULT_CONFIG.borderless)
+		currentConfig.vsync = config.get_value("General", "vsync", DEFAULT_CONFIG.vsync)
+		currentConfig.keyboard_controls.left = config.get_value("keyboard", "left", DEFAULT_CONFIG.keyboard_controls.left)
+		currentConfig.keyboard_controls.right = config.get_value("keyboard", "right", DEFAULT_CONFIG.keyboard_controls.right)
+		currentConfig.keyboard_controls.up = config.get_value("keyboard", "up", DEFAULT_CONFIG.keyboard_controls.up)
+		currentConfig.keyboard_controls.down = config.get_value("keyboard", "down", DEFAULT_CONFIG.keyboard_controls.down)
+		currentConfig.keyboard_controls.jump = config.get_value("keyboard", "jump", DEFAULT_CONFIG.keyboard_controls.jump)
+		currentConfig.keyboard_controls.shoot = config.get_value("keyboard", "shoot", DEFAULT_CONFIG.keyboard_controls.shoot)
+		currentConfig.keyboard_controls.restart = config.get_value("keyboard", "restart", DEFAULT_CONFIG.keyboard_controls.restart)
+		currentConfig.keyboard_controls.skip = config.get_value("keyboard", "skip", DEFAULT_CONFIG.keyboard_controls.skip)
+		currentConfig.keyboard_controls.suicide = config.get_value("keyboard", "suicide", DEFAULT_CONFIG.keyboard_controls.suicide)
+		currentConfig.keyboard_controls.pause = config.get_value("keyboard", "pause", DEFAULT_CONFIG.keyboard_controls.pause)
+		currentConfig.controller_controls.controller = config.get_value("controller", "controller", DEFAULT_CONFIG.controller_controls.controller)
+		currentConfig.controller_controls.left = config.get_value("controller", "left", DEFAULT_CONFIG.controller_controls.left)
+		currentConfig.controller_controls.right = config.get_value("controller", "right", DEFAULT_CONFIG.controller_controls.right)
+		currentConfig.controller_controls.up = config.get_value("controller", "up", DEFAULT_CONFIG.controller_controls.up)
+		currentConfig.controller_controls.down = config.get_value("controller", "down", DEFAULT_CONFIG.controller_controls.down)
+		currentConfig.controller_controls.jump = config.get_value("controller", "jump", DEFAULT_CONFIG.controller_controls.jump)
+		currentConfig.controller_controls.shoot = config.get_value("controller", "shoot", DEFAULT_CONFIG.controller_controls.shoot)
+		currentConfig.controller_controls.restart = config.get_value("controller", "restart", DEFAULT_CONFIG.controller_controls.restart)
+		currentConfig.controller_controls.skip = config.get_value("controller", "skip", DEFAULT_CONFIG.controller_controls.skip)
+		currentConfig.controller_controls.suicide = config.get_value("controller", "suicide", DEFAULT_CONFIG.controller_controls.suicide)
+		currentConfig.controller_controls.pause = config.get_value("controller", "pause", DEFAULT_CONFIG.controller_controls.pause)
+		applyConfig()
+
+func applyConfig() -> void:
+	OS.window_borderless = currentConfig.borderless
+	OS.window_fullscreen = currentConfig.fullscreen
+	OS.vsync_enabled = currentConfig.vsync
+	setVolume("Master", currentConfig.volume_master)
+	setVolume("Music", currentConfig.volume_music)
+	setVolume("Sfx", currentConfig.volume_sfx)
 
 func saveGame() -> void:
 	var tree := get_tree()
@@ -262,6 +345,9 @@ func onTreeChange() -> void:
 func callGroup(groupName: String, funcName: String) -> void:
 	var tree := get_tree()
 	tree.call_group_flags(tree.GROUP_CALL_REALTIME, groupName, funcName)
+
+func setVolume(channel: String, value: float) -> void:
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(channel), linear2db(value))
 
 func onSceneFinished() -> void:
 	print("Scene finished building")
