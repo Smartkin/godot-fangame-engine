@@ -19,7 +19,7 @@ func _ready() -> void:
 	$MusicCheckbox.grab_focus()
 
 
-func _on_MusicCheckbox_pressed():
+func _on_MusicCheckbox_pressed() -> void:
 	$MusicCheckbox.musicValue = !$MusicCheckbox.musicValue
 	WorldController.currentConfig.music = $MusicCheckbox.musicValue
 	if ($MusicCheckbox.musicValue):
@@ -28,7 +28,7 @@ func _on_MusicCheckbox_pressed():
 		WorldController.stopMusic()
 
 
-func _on_FullscreenCheckbox_pressed():
+func _on_FullscreenCheckbox_pressed() -> void:
 	$FullscreenCheckbox.fullscreen = !$FullscreenCheckbox.fullscreen
 	WorldController.currentConfig.fullscreen = $FullscreenCheckbox.fullscreen
 	if ($FullscreenCheckbox.fullscreen):
@@ -38,61 +38,61 @@ func _on_FullscreenCheckbox_pressed():
 	OS.window_fullscreen = $FullscreenCheckbox.fullscreen
 
 
-func _on_BorderlessCheckbox_pressed():
+func _on_BorderlessCheckbox_pressed() -> void:
 	$BorderlessCheckbox.borderless = !$BorderlessCheckbox.borderless
 	WorldController.currentConfig.borderless = $BorderlessCheckbox.borderless
 	OS.window_borderless = $BorderlessCheckbox.borderless
 
 
-func _on_VsyncCheckbox_pressed():
+func _on_VsyncCheckbox_pressed() -> void:
 	$VsyncCheckbox.vsync = !$VsyncCheckbox.vsync
 	WorldController.currentConfig.vsync = $VsyncCheckbox.vsync
 	OS.vsync_enabled = $VsyncCheckbox.vsync
 
 
 
-func _on_MasterVolumeSlider_entered():
+func _on_MasterVolumeSlider_entered() -> void:
 	$MasterVolume.add_color_override("font_color", $VsyncCheckbox.get_color("font_color_hover"))
 
 
-func _on_MasterVolumeSlider_exited():
+func _on_MasterVolumeSlider_exited() -> void:
 	$MasterVolume.add_color_override("font_color", $VsyncCheckbox.get_color("font_color"))
 
 
-func _on_MusicVolumeSlider_entered():
+func _on_MusicVolumeSlider_entered() -> void:
 	$MusicVolume.add_color_override("font_color", $VsyncCheckbox.get_color("font_color_hover"))
 
 
-func _on_MusicVolumeSlider_exited():
+func _on_MusicVolumeSlider_exited() -> void:
 	$MusicVolume.add_color_override("font_color", $VsyncCheckbox.get_color("font_color"))
 
 
-func _on_SfxVolumeSlider_entered():
+func _on_SfxVolumeSlider_entered() -> void:
 	$SfxVolume.add_color_override("font_color", $VsyncCheckbox.get_color("font_color_hover"))
 
 
-func _on_SfxVolumeSlider_exited():
+func _on_SfxVolumeSlider_exited() -> void:
 	$SfxVolume.add_color_override("font_color", $VsyncCheckbox.get_color("font_color"))
 
 
-func _on_MasterVolumeSlider_value_changed(value):
+func _on_MasterVolumeSlider_value_changed(value: float) -> void:
 	$MasterVolume.text = "Master Volume " + str(value * 100) + "%"
 	WorldController.currentConfig.volume_master = value
 	WorldController.setVolume("Master", value)
 
 
-func _on_MusicVolumeSlider_value_changed(value):
+func _on_MusicVolumeSlider_value_changed(value: float) -> void:
 	$MusicVolume.text = "Music Volume " + str(value * 100) + "%"
 	WorldController.currentConfig.volume_music = value
 	WorldController.setVolume("Music", value)
 
 
-func _on_SfxVolumeSlider_value_changed(value):
+func _on_SfxVolumeSlider_value_changed(value: float) -> void:
 	$SfxVolume.text = "Sound Effects Volume " + str(value * 100) + "%"
 	WorldController.currentConfig.volume_sfx = value
 	WorldController.setVolume("Sfx", value)
 
 
-func _on_BackKeyboard_pressed():
+func _on_BackKeyboard_pressed() -> void:
 	$MusicCheckbox.grab_focus()
 	get_parent().current_tab = 0

@@ -1,14 +1,14 @@
 extends StyledButtonCheckbox
 
-var vsync = false
+var vsync := false
 
-func _ready():
+func _ready() -> void:
 	if (vsync):
 		rightLbl = "ON"
 	else:
 		rightLbl = "OFF"
 
-func _process(delta):
+func _process(delta: float) -> void:
 	if (vsync):
 		rightLbl = "ON"
 	else:

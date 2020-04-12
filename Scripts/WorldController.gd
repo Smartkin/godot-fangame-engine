@@ -43,7 +43,7 @@ const DEFAULT_CONFIG := { # Default config when user starts the game
 		"pause": ord("P")
 	},
 	"controller_controls": {
-		"controller": -1,
+		"controller": 0,
 		"left": JOY_DPAD_LEFT,
 		"right": JOY_DPAD_RIGHT,
 		"up": JOY_DPAD_UP,
@@ -66,8 +66,9 @@ var musicToPlay := "" setget setMusic, getMusic # What music to play on scene ch
 
 # Readonly
 var loadingSave := false setget , getLoadingSave
-var globalData := EMPTY_SAVE setget , getGlobalData
-var currentConfig := DEFAULT_CONFIG setget , getCurrentConfig
+var globalData := {} setget , getGlobalData
+var currentConfig := {} setget , getCurrentConfig
+var gamePaused := false setget , getGamePaused
 
 # Private, while Godot still allows to access members freely from the outside
 # these should never be accessed anywhere outside of this script
@@ -80,6 +81,9 @@ var currentSong := ""
 
 func _ready() -> void:
 	print("World created")
+	pause_mode = PAUSE_MODE_PROCESS # Set pause mode to not affect World
+	globalData = EMPTY_SAVE.duplicate(true)
+	currentConfig = DEFAULT_CONFIG.duplicate(true)
 	var musicNode := AudioStreamPlayer.new()
 	musicNode.name = "MusicPlayer"
 	musicNode.bus = "Music"
@@ -138,6 +142,9 @@ func _input(event: InputEvent) -> void:
 		loadGame()
 	if (Input.is_key_pressed(KEY_F2)):
 		restartGame()
+	if (event.is_action_pressed("pause") && gameStarted):
+		get_tree().paused = !get_tree().paused
+		gamePaused = !gamePaused
 
 func restartGame():
 	saveToFile() # Save death/time
@@ -151,7 +158,7 @@ func openSaveFile(file: File, slot: int, mode: int):
 		file.open_encrypted_with_pass(getSavePath(slot), mode, SAVE_PASSWORD)
 
 func _process(delta):
-	if (gameStarted):
+	if (gameStarted && !gamePaused):
 		globalData.time.milliseconds += delta * 1000
 		if (globalData.time.milliseconds >= 1000):
 			globalData.time.seconds += 1
@@ -176,6 +183,9 @@ func getGrav() -> bool:
 	if (loadingSave):
 		return !saveData.reverseGrav
 	return reverseGrav
+
+func getGamePaused() -> bool:
+	return gamePaused
 
 func setGrav(on: bool) -> void:
 	reverseGrav = on
@@ -366,7 +376,7 @@ func onSceneFinished() -> void:
 	print("Scene finished building")
 	playMusic(musicToPlay)
 	if (startNewGame):
-		globalData = EMPTY_SAVE
+		globalData = EMPTY_SAVE.duplicate(true)
 		saveGame()
 		startNewGame = false
 	# Tell objects that are in the saved group that the scene finished building

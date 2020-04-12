@@ -22,7 +22,7 @@ func _ready() -> void:
 	ToggleLbl.margin_left = margin_left
 	ToggleLbl.margin_right = margin_right
 
-func _process(delta):
+func _process(delta: float) -> void:
 	if (prevLbl != rightLbl):
 		ToggleLbl.text = rightLbl
 		prevLbl = rightLbl
@@ -30,5 +30,5 @@ func _process(delta):
 func _pressed() -> void:
 	toggled = !toggled
 
-func _exit_tree():
+func _exit_tree() -> void:
 	ToggleLbl.queue_free()

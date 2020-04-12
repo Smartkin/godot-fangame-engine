@@ -52,6 +52,6 @@ func startNewGame() -> void:
 func _on_Save_NewGamePressed() -> void:
 	startNewGame()
 
-func _on_Save_LoadGamePressed():
+func _on_Save_LoadGamePressed() -> void:
 	WorldController.gameStarted = true
 	WorldController.loadGame(true)
