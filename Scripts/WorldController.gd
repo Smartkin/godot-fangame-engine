@@ -117,6 +117,7 @@ func playMusic(fileName := "") -> void:
 			currentSong = fileName
 		if (fileName == ""):
 			musicPlayer.stop()
+			currentSong = ""
 		if (musicToPlay != ""): # Reset music to play so it stops any music from playing when no music object is provided
 			musicToPlay = ""
 
