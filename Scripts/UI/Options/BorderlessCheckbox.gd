@@ -1,15 +1,15 @@
-extends Button
+extends StyledButtonCheckbox
 
 var borderless := false
 
-func _ready() -> void:
+func _ready():
 	if (borderless):
-		text = "Borderless on"
+		rightLbl = "ON"
 	else:
-		text = "Borderless off"
+		rightLbl = "OFF"
 
 func _process(delta):
 	if (borderless):
-		text = "Borderless on"
+		rightLbl = "ON"
 	else:
-		text = "Borderless off"
+		rightLbl = "OFF"

@@ -9,11 +9,10 @@
 [ext_resource path="res://Scripts/UI/Options/Options.gd" type="Script" id=7]
 [ext_resource path="res://Scripts/UI/Options/ControlsKeyPopup.gd" type="Script" id=8]
 [ext_resource path="res://Scripts/UI/Options/ControlBindButton.gd" type="Script" id=9]
-[ext_resource path="res://Scripts/UI/ControllerSelect.gd" type="Script" id=10]
 [ext_resource path="res://Scripts/UI/Options/MainOptionsTab.gd" type="Script" id=11]
 [ext_resource path="res://Scripts/UI/Options/KeyboardOptionsTab.gd" type="Script" id=12]
 [ext_resource path="res://Scripts/UI/Options/MusicCheckbox.gd" type="Script" id=13]
-[ext_resource path="res://Objects/UI/StyledButton.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Scripts/UI/Options/ControllerOptionsTab.gd" type="Script" id=14]
 [ext_resource path="res://Scripts/UI/Options/FullscreenCheckbox.gd" type="Script" id=15]
 [ext_resource path="res://Scripts/UI/Options/BorderlessCheckbox.gd" type="Script" id=16]
 [ext_resource path="res://Scripts/UI/Options/VsyncCheckbox.gd" type="Script" id=17]
@@ -39,6 +38,8 @@
 [sub_resource type="StyleBoxEmpty" id=9]
 
 [sub_resource type="StyleBoxEmpty" id=10]
+
+[sub_resource type="StyleBoxEmpty" id=11]
 
 [node name="Options" type="Control"]
 anchor_right = 1.0
@@ -106,6 +107,7 @@ __meta__ = {
 }
 
 [node name="MainOptionsTab" type="VBoxContainer" parent="OptionsTabs"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 11 )
@@ -113,11 +115,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MusicCheckbox" parent="OptionsTabs/MainOptionsTab" instance=ExtResource( 14 )]
-margin_top = 0.0
+[node name="MusicCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
+margin_right = 1280.0
 margin_bottom = 52.0
 hint_tooltip = "Turn music on/off"
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 5 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "Music"
+align = 0
+expand_icon = true
 script = ExtResource( 13 )
 
 [node name="MasterVolume" type="Label" parent="OptionsTabs/MainOptionsTab"]
@@ -190,24 +201,65 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="FullscreenCheckbox" parent="OptionsTabs/MainOptionsTab" instance=ExtResource( 14 )]
+[node name="FullscreenCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 284.0
+margin_right = 1280.0
+margin_bottom = 336.0
 hint_tooltip = "Display game in fullscreen"
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 5 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "Fullscreen"
+align = 0
+expand_icon = true
 script = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="BorderlessCheckbox" parent="OptionsTabs/MainOptionsTab" instance=ExtResource( 14 )]
+[node name="BorderlessCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
 margin_top = 340.0
+margin_right = 1280.0
 margin_bottom = 392.0
 hint_tooltip = "Remove borders around the window"
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 5 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "Borderless"
+align = 0
+expand_icon = true
 script = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="VsyncCheckbox" parent="OptionsTabs/MainOptionsTab" instance=ExtResource( 14 )]
+[node name="VsyncCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
 margin_top = 396.0
+margin_right = 1280.0
 margin_bottom = 448.0
 hint_tooltip = "Turn on vertical synchronization. Helps with tearing."
+size_flags_vertical = 3
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 5 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
 text = "Vsync"
+align = 0
+expand_icon = true
 script = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="KeyboardSettings" type="Button" parent="OptionsTabs/MainOptionsTab"]
 margin_top = 452.0
@@ -216,7 +268,7 @@ margin_bottom = 504.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 5 )
+custom_styles/focus = SubResource( 6 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -230,7 +282,7 @@ margin_bottom = 560.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 6 )
+custom_styles/focus = SubResource( 7 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -245,7 +297,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 7 )
+custom_styles/focus = SubResource( 8 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -264,7 +316,7 @@ margin_bottom = 48.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -280,7 +332,7 @@ margin_bottom = 100.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -296,7 +348,7 @@ margin_bottom = 152.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -312,7 +364,7 @@ margin_bottom = 204.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -328,7 +380,7 @@ margin_bottom = 256.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -344,7 +396,7 @@ margin_bottom = 308.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -360,7 +412,7 @@ margin_bottom = 360.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -376,7 +428,7 @@ margin_bottom = 412.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -392,7 +444,7 @@ margin_bottom = 464.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -408,7 +460,7 @@ margin_bottom = 516.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -424,7 +476,7 @@ margin_bottom = 568.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 9 )
+custom_styles/focus = SubResource( 10 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -438,7 +490,7 @@ margin_bottom = 620.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 9 )
+custom_styles/focus = SubResource( 10 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -446,21 +498,22 @@ text = "Back"
 align = 0
 
 [node name="ControllerOptionsTab" type="VBoxContainer" parent="OptionsTabs"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 14 )
 
-[node name="Controller" type="OptionButton" parent="OptionsTabs/ControllerOptionsTab"]
+[node name="ControllerPrompts" type="OptionButton" parent="OptionsTabs/ControllerOptionsTab"]
 margin_right = 1280.0
 margin_bottom = 39.0
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 10 )
+custom_styles/focus = SubResource( 11 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
-text = "Controller"
-script = ExtResource( 10 )
+text = "Playstation prompts"
+items = [ "Playstation prompts", null, false, 0, null, "XBox prompts", null, false, 1, null, "Generic controller prompts", null, false, 2, null ]
+selected = 0
 
 [node name="Left" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 43.0
@@ -469,7 +522,7 @@ margin_bottom = 87.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -486,7 +539,7 @@ margin_bottom = 135.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -503,7 +556,7 @@ margin_bottom = 183.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -520,7 +573,7 @@ margin_bottom = 231.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -537,7 +590,7 @@ margin_bottom = 279.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -554,7 +607,7 @@ margin_bottom = 327.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -571,7 +624,7 @@ margin_bottom = 375.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -588,7 +641,7 @@ margin_bottom = 423.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -605,7 +658,7 @@ margin_bottom = 471.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -622,7 +675,7 @@ margin_bottom = 519.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -639,7 +692,7 @@ margin_bottom = 567.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 9 )
+custom_styles/focus = SubResource( 10 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -653,7 +706,7 @@ margin_bottom = 620.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 9 )
+custom_styles/focus = SubResource( 10 )
 custom_styles/disabled = ExtResource( 6 )
 custom_styles/normal = ExtResource( 2 )
 custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
@@ -698,6 +751,7 @@ music = "GuyRock"
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/KeyboardSettings" to="." method="_on_KeyboardSettings_pressed"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/ControllerSettings" to="." method="_on_ControllerSettings_pressed"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/Back" to="." method="_on_Button_pressed"]
+[connection signal="resetKeyboardControls" from="OptionsTabs/KeyboardOptionsTab" to="." method="_on_KeyboardOptionsTab_resetKeyboardControls"]
 [connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Left" to="." method="_on_BindButton_keyBindPressed"]
 [connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Left" to="OptionsTabs/KeyboardOptionsTab/Left" method="_on_KeyBind_pressed"]
 [connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Right" to="." method="_on_BindButton_keyBindPressed"]
@@ -718,7 +772,9 @@ music = "GuyRock"
 [connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Suicide" to="OptionsTabs/KeyboardOptionsTab/Suicide" method="_on_KeyBind_pressed"]
 [connection signal="keyBindPressed" from="OptionsTabs/KeyboardOptionsTab/Pause" to="." method="_on_BindButton_keyBindPressed"]
 [connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/Pause" to="OptionsTabs/KeyboardOptionsTab/Pause" method="_on_KeyBind_pressed"]
+[connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/ResetControls" to="OptionsTabs/KeyboardOptionsTab" method="_on_ResetControls_pressed"]
 [connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/BackKeyboard" to="OptionsTabs/MainOptionsTab" method="_on_BackKeyboard_pressed"]
+[connection signal="resetControllerControls" from="OptionsTabs/ControllerOptionsTab" to="." method="_on_ControllerOptionsTab_resetControllerControls"]
 [connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Left" to="." method="_on_BindButton_keyBindPressed"]
 [connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Left" to="OptionsTabs/ControllerOptionsTab/Left" method="_on_KeyBind_pressed"]
 [connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Right" to="." method="_on_BindButton_keyBindPressed"]
@@ -739,4 +795,5 @@ music = "GuyRock"
 [connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Suicide" to="OptionsTabs/ControllerOptionsTab/Suicide" method="_on_KeyBind_pressed"]
 [connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Pause" to="." method="_on_BindButton_keyBindPressed"]
 [connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Pause" to="OptionsTabs/ControllerOptionsTab/Pause" method="_on_KeyBind_pressed"]
+[connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/ResetControls" to="OptionsTabs/ControllerOptionsTab" method="_on_ResetControls_pressed"]
 [connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/BackKeyboard" to="OptionsTabs/MainOptionsTab" method="_on_BackKeyboard_pressed"]

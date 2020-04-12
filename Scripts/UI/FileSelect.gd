@@ -31,9 +31,9 @@ func _ready() -> void:
 		loadButton.grab_focus()
 
 func _input(event: InputEvent) -> void:
-	if (event.is_action_pressed("pl_left")):
+	if (event.is_action_pressed("left")):
 		$SaveSlots.current_tab = clamp($SaveSlots.current_tab - 1, 0, $SaveSlots.get_tab_count() - 1)
-	if (event.is_action_pressed("pl_right")):
+	if (event.is_action_pressed("right")):
 		$SaveSlots.current_tab = clamp($SaveSlots.current_tab + 1, 0, $SaveSlots.get_tab_count() - 1)
 
 func _on_SaveSlots_tab_changed(tab: int) -> void:

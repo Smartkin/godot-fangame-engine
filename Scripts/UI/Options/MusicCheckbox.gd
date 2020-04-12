@@ -1,15 +1,15 @@
-extends Button
+extends StyledButtonCheckbox
 
 var musicValue := true
 
 func _ready():
 	if (musicValue):
-		text = "Music on"
+		rightLbl = "ON"
 	else:
-		text = "Music off"
+		rightLbl = "OFF"
 
 func _process(delta):
 	if (musicValue):
-		text = "Music on"
+		rightLbl = "ON"
 	else:
-		text = "Music off"
+		rightLbl = "OFF"

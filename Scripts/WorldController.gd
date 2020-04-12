@@ -285,6 +285,8 @@ func applyConfig() -> void:
 		InputMap.action_add_event(keyboard_control, ev)
 	# Add controller binds
 	for controller_controls in currentConfig.controller_controls:
+		if (controller_controls == "controller"):
+			continue
 		var ev := InputEventJoypadButton.new()
 		ev.button_index = currentConfig.controller_controls[controller_controls]
 		ev.pressed = true

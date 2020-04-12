@@ -1,15 +1,15 @@
-extends Button
+extends StyledButtonCheckbox
 
 var fullscreen := false
 
-func _ready() -> void:
+func _ready():
 	if (fullscreen):
-		text = "Fullscreen on"
+		rightLbl = "ON"
 	else:
-		text = "Fullscreen off"
+		rightLbl = "OFF"
 
 func _process(delta):
 	if (fullscreen):
-		text = "Fullscreen on"
+		rightLbl = "ON"
 	else:
-		text = "Fullscreen off"
+		rightLbl = "OFF"

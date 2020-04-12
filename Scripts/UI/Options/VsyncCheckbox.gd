@@ -1,15 +1,15 @@
-extends Button
+extends StyledButtonCheckbox
 
 var vsync = false
 
 func _ready():
 	if (vsync):
-		text = "Vsync on"
+		rightLbl = "ON"
 	else:
-		text = "Vsync off"
+		rightLbl = "OFF"
 
 func _process(delta):
 	if (vsync):
-		text = "Vsync on"
+		rightLbl = "ON"
 	else:
-		text = "Vsync off"
+		rightLbl = "OFF"

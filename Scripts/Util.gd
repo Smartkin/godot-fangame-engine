@@ -22,4 +22,16 @@ func getControllerButtonString(btnIndex: int) -> String:
 			return "Start"
 		JOY_SELECT:
 			return "Select"
-	return "Unknown button"
+		JOY_L:
+			return "Left Bumper/L1"
+		JOY_L2:
+			return "Left Trigger/L2"
+		JOY_L3:
+			return "Left Stick Button/L3"
+		JOY_R:
+			return "Right Bumper/R1"
+		JOY_R2:
+			return "Right Trigger/R2"
+		JOY_R3:
+			return "Right Stick Button/R3"
+	return "Button " + str(btnIndex)
