@@ -78,6 +78,8 @@ var windowCaption: String = ProjectSettings.get_setting("application/config/name
 var prevWinCap := ""
 var musicFiles := {}
 var currentSong := ""
+var pauseMenu := preload("res://Objects/UI/PauseMenu.tscn")
+var curPauseMenu: Node
 
 func _ready() -> void:
 	print("World created")
@@ -138,13 +140,21 @@ func getTimeStringFormatted(timeJson: Dictionary) -> String:
 	return TIME_FORMAT % [timeJson.hours, timeJson.minutes, timeJson.seconds, timeJson.milliseconds]
 
 func _input(event: InputEvent) -> void:
-	if (event.is_action_pressed("restart") && gameStarted):
-		loadGame()
+	if (gameStarted):
+		if (event.is_action_pressed("restart")):
+			loadGame()
+		if (event.is_action_pressed("pause")):
+			get_tree().paused = !get_tree().paused
+			gamePaused = !gamePaused
+			if (gamePaused):
+				curPauseMenu = pauseMenu.instance()
+				add_child(curPauseMenu)
+				setVolume("Music", currentConfig.volume_music / 2)
+			else:
+				setVolume("Music", currentConfig.volume_music)
+				curPauseMenu.queue_free()
 	if (Input.is_key_pressed(KEY_F2)):
 		restartGame()
-	if (event.is_action_pressed("pause") && gameStarted):
-		get_tree().paused = !get_tree().paused
-		gamePaused = !gamePaused
 
 func restartGame():
 	saveToFile() # Save death/time
