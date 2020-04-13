@@ -11,6 +11,10 @@ An engine for fangames made in Godot 3.2.1
 - Add configurations
 - Add simple pause menu
 
+> v1.01
+
+- Fix current song not getting set when no song is being played
+
 # Features
 * Adjusted kid's physics, fall speed is lowered, coyote frames added, jump input buffering added (If desidered all can be adjusted to feel closer to original fangame physics)
 * Standard gimmicks (Vines, 3 water types, one-way platforms(not coded in a potato way), gravity flipping and slopes)
