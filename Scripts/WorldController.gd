@@ -113,12 +113,22 @@ func loadMusic() -> void:
 	var musicDir := Directory.new()
 	musicDir.open("res://Music")
 	musicDir.list_dir_begin(true)
-	var musicFile := musicDir.get_next()
+	loadMusicRecursively(musicDir)
+
+# Load music from all included folders so we can neatly sort the music
+# e.g. into stages
+func loadMusicRecursively(currentDir: Directory) -> void:
+	var musicFile := currentDir.get_next()
 	while (musicFile != ""):
-		print(musicDir.get_current_dir() + "/" + musicFile)
+		print(currentDir.get_current_dir() + "/" + musicFile)
 		if (musicFile.ends_with(".ogg")):
-			musicFiles[musicFile] = load(musicDir.get_current_dir() + "/" + musicFile)
-		musicFile = musicDir.get_next()
+			musicFiles[musicFile] = load(currentDir.get_current_dir() + "/" + musicFile)
+		elif (currentDir.dir_exists(musicFile)):
+			var newDir = Directory.new()
+			newDir.open(currentDir.get_current_dir() + "/" + musicFile)
+			newDir.list_dir_begin(true)
+			loadMusicRecursively(newDir)
+		musicFile = currentDir.get_next()
 
 # Plays a specified music track
 func playMusic(fileName := "") -> void:

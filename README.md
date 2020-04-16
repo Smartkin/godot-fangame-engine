@@ -24,6 +24,10 @@ An engine for fangames made in Godot 3.2.1
 - Revert camera zoom back to normal
 - Add more descriptive comments
 
+> v1.03
+
+- Load music recursively from the music folder
+
 # Features
 * Adjusted kid's physics, fall speed is lowered, coyote frames added, jump input buffering added (If desidered all can be adjusted to feel closer to original fangame physics)
 * Standard gimmicks (Vines, 3 water types, one-way platforms(not coded in a potato way), gravity flipping and slopes)
