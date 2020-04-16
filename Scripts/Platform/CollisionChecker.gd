@@ -8,9 +8,13 @@ var speed := Vector2.ZERO
 var toMove: Node2D = null
 
 func _physics_process(delta: float) -> void:
+	# Ugh, kind of hacked in but we wanna keep the sync
+	# but we also wanna move and detect collisions internally by Godot
+	# instead of attempting our own math
 	set_sync_to_physics(false)
 	speed = move_and_slide(speed, UP, true, 1)
 	set_sync_to_physics(true)
+	# Also a hack to move parent along with us
 	position -= speed * delta
 	if (toMove != null):
 		toMove.position += speed * delta
@@ -19,5 +23,6 @@ func _physics_process(delta: float) -> void:
 	var collisions := []
 	for i in range(get_slide_count()):
 		collisions.append(get_slide_collision(i))
+	# Check if any block collisions were detected, so parent can react accordingly
 	if (collisions.size() != 0):
 		emit_signal("block_collision", collisions)

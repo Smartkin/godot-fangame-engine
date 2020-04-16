@@ -1,7 +1,8 @@
 extends Control
 
-export(String, FILE, "*.tscn") var startScene
+export(String, FILE, "*.tscn") var startScene # Scene from which the game starts
 
+# Save slot object
 var saveSlotUI := preload("res://Objects/UI/FileSelect/SaveTabTemplate.tscn")
 
 func _ready() -> void:
@@ -24,6 +25,7 @@ func _ready() -> void:
 			var loadButton := get_node("SaveSlots/Save " + str(i + 1) +"/Load") as Button
 			loadButton.disabled = true
 			label.text = saveData.message
+	# Disable load button if no save data is present
 	var loadButton := $"SaveSlots/Save 1/Load" as Button
 	if (loadButton.disabled):
 		$"SaveSlots/Save 1/New".grab_focus()
@@ -31,6 +33,7 @@ func _ready() -> void:
 		loadButton.grab_focus()
 
 func _input(event: InputEvent) -> void:
+	# Switch save tabs with keyboard/controller input
 	if (event.is_action_pressed("left")):
 		$SaveSlots.current_tab = clamp($SaveSlots.current_tab - 1, 0, $SaveSlots.get_tab_count() - 1)
 	if (event.is_action_pressed("right")):

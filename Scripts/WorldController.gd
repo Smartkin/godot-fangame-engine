@@ -8,6 +8,7 @@ const CONFIG_FILE_NAME := "config.cfg" # Config's file name
 const ENCRYPT_SAVES := false # Whether saves should be encrypted
 const TIME_FORMAT := "%02d:%02d:%02d.%03d" # Time format of 00:00:00.000
 const SANDBOXED_SAVES := true # Whether saves are stored in user's APPDATA or along with exe file
+const DEBUG_MODE := true # Whether debug mode is turned on
 const EMPTY_SAVE := { # Default save data when no save is present
 	"playerPosX": 0, # JSON doesn't support Vector2
 	"playerPosY": 0,
@@ -22,6 +23,12 @@ const EMPTY_SAVE := { # Default save data when no save is present
 	"sceneName": "TestBed",
 	"reverseGrav": false
 }
+enum BUTTON_PROMPTS {
+	KEYBOARD,
+	PLAYSTATION,
+	XBOX,
+	GENERIC_CONTROLLER
+}
 const DEFAULT_CONFIG := { # Default config when user starts the game
 	"music": true,
 	"volume_master": 1.0,
@@ -30,6 +37,7 @@ const DEFAULT_CONFIG := { # Default config when user starts the game
 	"fullscreen": false,
 	"borderless": false,
 	"vsync": false,
+	"button_prompts": BUTTON_PROMPTS.KEYBOARD,
 	"keyboard_controls": {
 		"left": KEY_LEFT,
 		"right": KEY_RIGHT,
@@ -43,7 +51,6 @@ const DEFAULT_CONFIG := { # Default config when user starts the game
 		"pause": ord("P")
 	},
 	"controller_controls": {
-		"controller": 0,
 		"left": JOY_DPAD_LEFT,
 		"right": JOY_DPAD_RIGHT,
 		"up": JOY_DPAD_UP,
@@ -65,34 +72,39 @@ var startNewGame := false # Whether new game has been started
 var musicToPlay := "" setget setMusic, getMusic # What music to play on scene change
 
 # Readonly
-var loadingSave := false setget , getLoadingSave
-var globalData := {} setget , getGlobalData
-var currentConfig := {} setget , getCurrentConfig
-var gamePaused := false setget , getGamePaused
+var loadingSave := false setget , getLoadingSave # Whether save load is in progress
+var globalData := {} setget , getGlobalData # Currently stored global/save data, see _ready() for default value
+var currentConfig := {} setget , getCurrentConfig # Current user configuration, see _ready() for default value
+var gamePaused := false setget , getGamePaused # Whether game is currently paused
 
 # Private, while Godot still allows to access members freely from the outside
 # these should never be accessed anywhere outside of this script
-var currentScene: Node = null
-var saveData := EMPTY_SAVE
-var windowCaption: String = ProjectSettings.get_setting("application/config/name")
-var prevWinCap := ""
-var musicFiles := {}
-var currentSong := ""
-var pauseMenu := preload("res://Objects/UI/PauseMenu.tscn")
-var curPauseMenu: Node
+var currentScene: Node = null # Currently played scene
+var saveData := {} # Current save data, see _ready() for default value
+var windowCaption: String = ProjectSettings.get_setting("application/config/name") # Game's window caption
+var prevWinCap := "" # Game's previously set window caption
+var musicFiles := {} # Loaded music files
+var currentSong := "" # Currently played song filename
+var pauseMenu := preload("res://Objects/UI/PauseMenu.tscn") # Pause menu object
+var curPauseMenu: Node = null # Current pause menu object instance
+var sceneTree: SceneTree = null # Game's scene tree
 
 func _ready() -> void:
 	print("World created")
+	sceneTree = get_tree() # Get game's scene tree
 	pause_mode = PAUSE_MODE_PROCESS # Set pause mode to not affect World
+	# Set the default values of global save data and user configuration
 	globalData = EMPTY_SAVE.duplicate(true)
+	saveData = EMPTY_SAVE.duplicate(true)
 	currentConfig = DEFAULT_CONFIG.duplicate(true)
+	# Init the global music player
 	var musicNode := AudioStreamPlayer.new()
 	musicNode.name = "MusicPlayer"
 	musicNode.bus = "Music"
 	add_child(musicNode)
-	assert(SAVE_FILES > 0)
-	get_tree().connect("tree_changed", self, "onTreeChange") # Tracks when scene finishes building
-	connect("tree_exiting", self, "onGameEnd")
+	assert(SAVE_FILES > 0) # Make sure that we have more than 0 save slots
+	sceneTree.connect("tree_changed", self, "onTreeChange") # Tracks when scene finishes building
+	connect("tree_exiting", self, "onGameEnd") # Connect to game ending signal
 	loadMusic() # Load music
 	loadConfig() # Load user's configuration
 
@@ -108,16 +120,18 @@ func loadMusic() -> void:
 			musicFiles[musicFile] = load(musicDir.get_current_dir() + "/" + musicFile)
 		musicFile = musicDir.get_next()
 
+# Plays a specified music track
 func playMusic(fileName := "") -> void:
-	if (currentConfig.music):
+	if (currentConfig.music): # Check that music is currently turned on
 		var musicPlayer := $MusicPlayer as AudioStreamPlayer
 		if (currentSong != fileName && fileName != ""):
+			# Make sure we will play a loaded song
+			assert(musicFiles[fileName + ".ogg"] != null)
 			musicPlayer.stream = musicFiles[fileName + ".ogg"]
 			musicPlayer.play()
 			currentSong = fileName
-		if (fileName == ""):
-			musicPlayer.stop()
-			currentSong = ""
+		if (fileName == ""): # If no file was specified stop playing music
+			stopMusic()
 		if (musicToPlay != ""): # Reset music to play so it stops any music from playing when no music object is provided
 			musicToPlay = ""
 
@@ -137,6 +151,7 @@ func onGameEnd() -> void:
 	if (gameStarted):
 		saveToFile() # Save death/time
 
+# Get time string in 00:00:00.000 format
 func getTimeStringFormatted(timeJson: Dictionary) -> String:
 	return TIME_FORMAT % [timeJson.hours, timeJson.minutes, timeJson.seconds, timeJson.milliseconds]
 
@@ -145,30 +160,39 @@ func _input(event: InputEvent) -> void:
 		if (event.is_action_pressed("restart")):
 			loadGame()
 		if (event.is_action_pressed("pause")):
-			get_tree().paused = !get_tree().paused
-			gamePaused = !gamePaused
-			if (gamePaused):
-				curPauseMenu = pauseMenu.instance()
-				add_child(curPauseMenu)
-				setVolume("Music", currentConfig.volume_music / 2)
-			else:
-				setVolume("Music", currentConfig.volume_music)
-				curPauseMenu.queue_free()
+			pauseGame()
+	if (DEBUG_MODE && !gameStarted):
+		if (event.is_action_pressed("restart")):
+			sceneTree.change_scene(sceneTree.current_scene.filename)
 	if (Input.is_key_pressed(KEY_F2)):
 		restartGame()
 
+func pauseGame() -> void:
+	# Pause/unpause scene tree
+	sceneTree.paused = !sceneTree.paused
+	gamePaused = !gamePaused
+	if (gamePaused): # If we are paused, spawn the pause menu object
+		curPauseMenu = pauseMenu.instance()
+		add_child(curPauseMenu)
+	else: # Otherwise delete it
+		curPauseMenu.queue_free()
+
 func restartGame():
 	saveToFile() # Save death/time
-	get_tree().change_scene(ProjectSettings.get_setting("application/run/main_scene"))
+	if (gamePaused):
+		pauseGame() # Unpause the game if it was paused
+	sceneTree.change_scene(ProjectSettings.get_setting("application/run/main_scene"))
 	gameStarted = false
 
 func openSaveFile(file: File, slot: int, mode: int):
-	if (!ENCRYPT_SAVES):
+	if (!ENCRYPT_SAVES): # Check if we encrypt save files
 		file.open(getSavePath(slot), mode)
 	else:
 		file.open_encrypted_with_pass(getSavePath(slot), mode, SAVE_PASSWORD)
 
+# Any additional processing you wanna do every game frame
 func _process(delta):
+	# In-game time, doesn't include pausing
 	if (gameStarted && !gamePaused):
 		globalData.time.milliseconds += delta * 1000
 		if (globalData.time.milliseconds >= 1000):
@@ -223,6 +247,7 @@ func setSaveSlot(slot: int) -> void:
 func getLoadingSave() -> bool:
 	return loadingSave
 
+# Save player's configuration
 func saveConfig() -> void:
 	var config := ConfigFile.new()
 	config.set_value("General", "music", currentConfig.music)
@@ -232,6 +257,7 @@ func saveConfig() -> void:
 	config.set_value("General", "fullscreen", currentConfig.fullscreen)
 	config.set_value("General", "borderless", currentConfig.borderless)
 	config.set_value("General", "vsync", currentConfig.vsync)
+	config.set_value("General", "button_prompts", currentConfig.button_prompts)
 	config.set_value("keyboard", "left", currentConfig.keyboard_controls.left)
 	config.set_value("keyboard", "right", currentConfig.keyboard_controls.right)
 	config.set_value("keyboard", "up", currentConfig.keyboard_controls.up)
@@ -242,7 +268,6 @@ func saveConfig() -> void:
 	config.set_value("keyboard", "skip", currentConfig.keyboard_controls.skip)
 	config.set_value("keyboard", "suicide", currentConfig.keyboard_controls.suicide)
 	config.set_value("keyboard", "pause", currentConfig.keyboard_controls.pause)
-	config.set_value("controller", "controller", currentConfig.controller_controls.controller)
 	config.set_value("controller", "left", currentConfig.controller_controls.left)
 	config.set_value("controller", "right", currentConfig.controller_controls.right)
 	config.set_value("controller", "up", currentConfig.controller_controls.up)
@@ -255,6 +280,7 @@ func saveConfig() -> void:
 	config.set_value("controller", "pause", currentConfig.controller_controls.pause)
 	config.save(getConfigPath())
 
+# Load player's configuration
 func loadConfig() -> void:
 	var config := ConfigFile.new()
 	var err := config.load(getConfigPath())
@@ -269,6 +295,7 @@ func loadConfig() -> void:
 		currentConfig.fullscreen = config.get_value("General", "fullscreen", DEFAULT_CONFIG.fullscreen)
 		currentConfig.borderless = config.get_value("General", "borderless", DEFAULT_CONFIG.borderless)
 		currentConfig.vsync = config.get_value("General", "vsync", DEFAULT_CONFIG.vsync)
+		currentConfig.button_prompts = config.get_value("General", "button_prompts", DEFAULT_CONFIG.button_prompts)
 		currentConfig.keyboard_controls.left = config.get_value("keyboard", "left", DEFAULT_CONFIG.keyboard_controls.left)
 		currentConfig.keyboard_controls.right = config.get_value("keyboard", "right", DEFAULT_CONFIG.keyboard_controls.right)
 		currentConfig.keyboard_controls.up = config.get_value("keyboard", "up", DEFAULT_CONFIG.keyboard_controls.up)
@@ -279,7 +306,6 @@ func loadConfig() -> void:
 		currentConfig.keyboard_controls.skip = config.get_value("keyboard", "skip", DEFAULT_CONFIG.keyboard_controls.skip)
 		currentConfig.keyboard_controls.suicide = config.get_value("keyboard", "suicide", DEFAULT_CONFIG.keyboard_controls.suicide)
 		currentConfig.keyboard_controls.pause = config.get_value("keyboard", "pause", DEFAULT_CONFIG.keyboard_controls.pause)
-		currentConfig.controller_controls.controller = config.get_value("controller", "controller", DEFAULT_CONFIG.controller_controls.controller)
 		currentConfig.controller_controls.left = config.get_value("controller", "left", DEFAULT_CONFIG.controller_controls.left)
 		currentConfig.controller_controls.right = config.get_value("controller", "right", DEFAULT_CONFIG.controller_controls.right)
 		currentConfig.controller_controls.up = config.get_value("controller", "up", DEFAULT_CONFIG.controller_controls.up)
@@ -292,10 +318,12 @@ func loadConfig() -> void:
 		currentConfig.controller_controls.pause = config.get_value("controller", "pause", DEFAULT_CONFIG.controller_controls.pause)
 		applyConfig()
 
+# Apply's current configuration
 func applyConfig() -> void:
 	OS.window_borderless = currentConfig.borderless
 	OS.window_fullscreen = currentConfig.fullscreen
 	OS.vsync_enabled = currentConfig.vsync
+	# Set channel volumes
 	setVolume("Master", currentConfig.volume_master)
 	setVolume("Music", currentConfig.volume_music)
 	setVolume("Sfx", currentConfig.volume_sfx)
@@ -314,7 +342,7 @@ func applyConfig() -> void:
 		InputMap.action_add_event(controller_controls, ev)
 
 func saveGame() -> void:
-	var tree := get_tree()
+	var tree := sceneTree
 	var scene := tree.current_scene
 	var playerController := scene.find_node("PlayerController")
 	if (playerController != null && !playerController.playerDead):
@@ -328,10 +356,12 @@ func saveGame() -> void:
 		# Save the data to a file
 		saveToFile()
 
+# Load game data for a chosen save slot
 func getGameData(slot: int) -> Dictionary:
 	var loadFile := File.new()
 	var data := {}
 	if (!loadFile.file_exists(getSavePath(slot))):
+		# Set a message that no save file or data is present
 		data.message = "No data"
 		return data
 	openSaveFile(loadFile, slot, File.READ)
@@ -340,12 +370,15 @@ func getGameData(slot: int) -> Dictionary:
 	return data
 
 func loadGame(loadFromSave := false) -> void:
-	var tree := get_tree()
+	var tree := sceneTree
 	loadingSave = true
 	if (loadFromSave):
 		var loadFile := File.new()
 		if (!loadFile.file_exists(getSavePath(saveSlot))):
+			# Realistically this should never happen but as a safe guard
+			# this is here as a debug check
 			print("FILE WAS NOT FOUND!")
+			print_stack()
 			return
 		openSaveFile(loadFile, saveSlot, File.READ)
 		saveData = parse_json(loadFile.get_line())
@@ -368,7 +401,7 @@ func saveToFile() -> void:
 
 # Monitor tree change and if scene changed apply post scene finishing effects
 func onTreeChange() -> void:
-	var tree := get_tree()
+	var tree := sceneTree
 	if (tree != null):
 		if (currentScene != tree.current_scene):
 			currentScene = tree.current_scene
@@ -377,9 +410,10 @@ func onTreeChange() -> void:
 
 # Wrapper for call_group_flags(tree.GROUP_CALL_REALTIME, groupName, funcName)
 func callGroup(groupName: String, funcName: String) -> void:
-	var tree := get_tree()
+	var tree := sceneTree
 	tree.call_group_flags(tree.GROUP_CALL_REALTIME, groupName, funcName)
 
+# Sets volume on a certain channel, value should range from 0 to 1
 func setVolume(channel: String, value: float) -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(channel), linear2db(value))
 

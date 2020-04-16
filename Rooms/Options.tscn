@@ -29,6 +29,8 @@
 
 [sub_resource type="StyleBoxEmpty" id=5]
 
+[sub_resource type="StyleBoxEmpty" id=11]
+
 [sub_resource type="StyleBoxEmpty" id=6]
 
 [sub_resource type="StyleBoxEmpty" id=7]
@@ -38,8 +40,6 @@
 [sub_resource type="StyleBoxEmpty" id=9]
 
 [sub_resource type="StyleBoxEmpty" id=10]
-
-[sub_resource type="StyleBoxEmpty" id=11]
 
 [node name="Options" type="Control"]
 anchor_right = 1.0
@@ -116,7 +116,7 @@ __meta__ = {
 
 [node name="MusicCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
 margin_right = 1280.0
-margin_bottom = 52.0
+margin_bottom = 48.0
 hint_tooltip = "Turn music on/off"
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
@@ -131,9 +131,9 @@ expand_icon = true
 script = ExtResource( 13 )
 
 [node name="MasterVolume" type="Label" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 56.0
+margin_top = 52.0
 margin_right = 1280.0
-margin_bottom = 108.0
+margin_bottom = 100.0
 hint_tooltip = "General game volume"
 mouse_filter = 1
 size_flags_vertical = 7
@@ -144,9 +144,9 @@ __meta__ = {
 }
 
 [node name="MasterVolumeSlider" type="HSlider" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 112.0
+margin_top = 104.0
 margin_right = 1280.0
-margin_bottom = 128.0
+margin_bottom = 120.0
 size_flags_vertical = 1
 custom_styles/slider = ExtResource( 18 )
 custom_styles/grabber_area = ExtResource( 19 )
@@ -155,9 +155,9 @@ step = 0.01
 value = 1.0
 
 [node name="MusicVolume" type="Label" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 132.0
+margin_top = 124.0
 margin_right = 1280.0
-margin_bottom = 184.0
+margin_bottom = 172.0
 mouse_filter = 1
 size_flags_vertical = 7
 text = "Music volume"
@@ -167,9 +167,9 @@ __meta__ = {
 }
 
 [node name="MusicVolumeSlider" type="HSlider" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 188.0
+margin_top = 176.0
 margin_right = 1280.0
-margin_bottom = 204.0
+margin_bottom = 192.0
 size_flags_vertical = 1
 custom_styles/slider = ExtResource( 18 )
 custom_styles/grabber_area = ExtResource( 19 )
@@ -178,9 +178,9 @@ step = 0.01
 value = 1.0
 
 [node name="SfxVolume" type="Label" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 208.0
+margin_top = 196.0
 margin_right = 1280.0
-margin_bottom = 260.0
+margin_bottom = 244.0
 mouse_filter = 1
 size_flags_vertical = 7
 text = "Sound effects volume"
@@ -190,9 +190,9 @@ __meta__ = {
 }
 
 [node name="SfxVolumeSlider" type="HSlider" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 264.0
+margin_top = 248.0
 margin_right = 1280.0
-margin_bottom = 280.0
+margin_bottom = 264.0
 size_flags_vertical = 1
 custom_styles/slider = ExtResource( 18 )
 custom_styles/grabber_area = ExtResource( 19 )
@@ -201,9 +201,9 @@ step = 0.01
 value = 1.0
 
 [node name="FullscreenCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 284.0
+margin_top = 268.0
 margin_right = 1280.0
-margin_bottom = 336.0
+margin_bottom = 316.0
 hint_tooltip = "Display game in fullscreen"
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
@@ -221,9 +221,9 @@ __meta__ = {
 }
 
 [node name="BorderlessCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 340.0
+margin_top = 320.0
 margin_right = 1280.0
-margin_bottom = 392.0
+margin_bottom = 368.0
 hint_tooltip = "Remove borders around the window"
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
@@ -241,9 +241,9 @@ __meta__ = {
 }
 
 [node name="VsyncCheckbox" type="Button" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 396.0
+margin_top = 372.0
 margin_right = 1280.0
-margin_bottom = 448.0
+margin_bottom = 420.0
 hint_tooltip = "Turn on vertical synchronization. Helps with tearing."
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
@@ -260,10 +260,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="KeyboardSettings" type="Button" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 452.0
+[node name="ButtonPrompts" type="OptionButton" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 424.0
 margin_right = 1280.0
-margin_bottom = 504.0
+margin_bottom = 463.0
+custom_styles/hover = ExtResource( 4 )
+custom_styles/pressed = ExtResource( 5 )
+custom_styles/focus = SubResource( 11 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
+text = "Keyboard prompts"
+items = [ "Keyboard prompts", null, false, 0, null, "Playstation prompts", null, false, 1, null, "XBox prompts", null, false, 2, null, "Generic controller prompts", null, false, 3, null ]
+selected = 0
+
+[node name="KeyboardSettings" type="Button" parent="OptionsTabs/MainOptionsTab"]
+margin_top = 467.0
+margin_right = 1280.0
+margin_bottom = 515.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
@@ -275,9 +289,9 @@ text = "Keyboard settings"
 align = 0
 
 [node name="ControllerSettings" type="Button" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 508.0
+margin_top = 519.0
 margin_right = 1280.0
-margin_bottom = 560.0
+margin_bottom = 567.0
 size_flags_vertical = 3
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
@@ -289,7 +303,7 @@ text = "Controller settings"
 align = 0
 
 [node name="Back" type="Button" parent="OptionsTabs/MainOptionsTab"]
-margin_top = 564.0
+margin_top = 571.0
 margin_right = 1280.0
 margin_bottom = 620.0
 size_flags_horizontal = 3
@@ -501,19 +515,6 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 14 )
-
-[node name="ControllerPrompts" type="OptionButton" parent="OptionsTabs/ControllerOptionsTab"]
-margin_right = 1280.0
-margin_bottom = 39.0
-custom_styles/hover = ExtResource( 4 )
-custom_styles/pressed = ExtResource( 5 )
-custom_styles/focus = SubResource( 11 )
-custom_styles/disabled = ExtResource( 6 )
-custom_styles/normal = ExtResource( 2 )
-custom_colors/font_color_hover = Color( 0, 0.992157, 0.827451, 0.490196 )
-text = "None"
-items = [ "None", null, false, 0, null, "Playstation prompts", null, false, 1, null, "XBox prompts", null, false, 2, null, "Generic controller prompts", null, false, 3, null ]
-selected = 0
 
 [node name="Left" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 43.0
@@ -748,6 +749,7 @@ music = "GuyRock"
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/FullscreenCheckbox" to="OptionsTabs/MainOptionsTab" method="_on_FullscreenCheckbox_pressed"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/BorderlessCheckbox" to="OptionsTabs/MainOptionsTab" method="_on_BorderlessCheckbox_pressed"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/VsyncCheckbox" to="OptionsTabs/MainOptionsTab" method="_on_VsyncCheckbox_pressed"]
+[connection signal="item_selected" from="OptionsTabs/MainOptionsTab/ButtonPrompts" to="OptionsTabs/MainOptionsTab" method="_on_ButtonPrompts_item_selected"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/KeyboardSettings" to="." method="_on_KeyboardSettings_pressed"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/ControllerSettings" to="." method="_on_ControllerSettings_pressed"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/Back" to="." method="_on_Button_pressed"]
@@ -775,7 +777,6 @@ music = "GuyRock"
 [connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/ResetControls" to="OptionsTabs/KeyboardOptionsTab" method="_on_ResetControls_pressed"]
 [connection signal="pressed" from="OptionsTabs/KeyboardOptionsTab/BackKeyboard" to="OptionsTabs/MainOptionsTab" method="_on_BackKeyboard_pressed"]
 [connection signal="resetControllerControls" from="OptionsTabs/ControllerOptionsTab" to="." method="_on_ControllerOptionsTab_resetControllerControls"]
-[connection signal="item_selected" from="OptionsTabs/ControllerOptionsTab/ControllerPrompts" to="OptionsTabs/ControllerOptionsTab" method="_on_ControllerPrompts_item_selected"]
 [connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Left" to="." method="_on_BindButton_keyBindPressed"]
 [connection signal="pressed" from="OptionsTabs/ControllerOptionsTab/Left" to="OptionsTabs/ControllerOptionsTab/Left" method="_on_KeyBind_pressed"]
 [connection signal="keyBindPressed" from="OptionsTabs/ControllerOptionsTab/Right" to="." method="_on_BindButton_keyBindPressed"]

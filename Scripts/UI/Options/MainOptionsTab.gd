@@ -12,6 +12,7 @@ func _ready() -> void:
 	$FullscreenCheckbox.fullscreen = curConf.fullscreen
 	$BorderlessCheckbox.borderless = curConf.borderless
 	$VsyncCheckbox.vsync = curConf.vsync
+	$ButtonPrompts.selected = curConf.button_prompts
 	if ($FullscreenCheckbox.fullscreen):
 		$BorderlessCheckbox.disabled = true
 	else:
@@ -96,3 +97,6 @@ func _on_SfxVolumeSlider_value_changed(value: float) -> void:
 func _on_BackKeyboard_pressed() -> void:
 	$MusicCheckbox.grab_focus()
 	get_parent().current_tab = 0
+
+func _on_ButtonPrompts_item_selected(id):
+	WorldController.currentConfig.button_prompts = id

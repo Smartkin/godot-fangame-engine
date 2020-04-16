@@ -12,7 +12,7 @@ func _on_KeyboardSettings_pressed() -> void:
 
 func _on_ControllerSettings_pressed() -> void:
 	$OptionsTabs.current_tab = 2
-	$OptionsTabs/ControllerOptionsTab/ControllerPrompts.grab_focus()
+	$OptionsTabs/ControllerOptionsTab/Left.grab_focus()
 	$Center/ChangeControlPopup.keyType = $Center/ChangeControlPopup.INPUT_WAIT.JOYPAD
 
 func _on_Popup_controlKeyInput(newKey: InputEvent, actionName: String) -> void:
