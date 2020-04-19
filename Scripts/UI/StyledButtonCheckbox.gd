@@ -1,34 +1,33 @@
+class_name StyledButtonCheckbox
 extends Button
 
-class_name StyledButtonCheckbox
-
-export(String) var rightLbl = "right"
+export(String) var right_lbl = "right"
 export(bool) var toggled = false
 
-var ToggleLbl := Label.new()
-var prevLbl := ""
+var toggle_lbl := Label.new()
+var prev_right_lbl := ""
 
 func _ready() -> void:
-	add_child(ToggleLbl)
-	ToggleLbl.name = "ToggleLbl"
-	ToggleLbl.theme = theme
-	ToggleLbl.add_font_override("font", get_font("font"))
-	ToggleLbl.size_flags_horizontal = SIZE_EXPAND_FILL
-	ToggleLbl.size_flags_vertical = SIZE_EXPAND_FILL
-	ToggleLbl.align = ToggleLbl.ALIGN_RIGHT
-	ToggleLbl.valign = ToggleLbl.VALIGN_CENTER
-	ToggleLbl.text = rightLbl
-	prevLbl = rightLbl
-	ToggleLbl.margin_left = margin_left
-	ToggleLbl.margin_right = margin_right
+	add_child(toggle_lbl)
+	toggle_lbl.name = "toggle_lbl"
+	toggle_lbl.theme = theme
+	toggle_lbl.add_font_override("font", get_font("font"))
+	toggle_lbl.size_flags_horizontal = SIZE_EXPAND_FILL
+	toggle_lbl.size_flags_vertical = SIZE_EXPAND_FILL
+	toggle_lbl.align = toggle_lbl.ALIGN_RIGHT
+	toggle_lbl.valign = toggle_lbl.VALIGN_CENTER
+	toggle_lbl.text = right_lbl
+	prev_right_lbl = right_lbl
+	toggle_lbl.margin_left = margin_left
+	toggle_lbl.margin_right = margin_right
 
 func _process(delta: float) -> void:
-	if (prevLbl != rightLbl):
-		ToggleLbl.text = rightLbl
-		prevLbl = rightLbl
+	if (prev_right_lbl != right_lbl):
+		toggle_lbl.text = right_lbl
+		prev_right_lbl = right_lbl
 
 func _pressed() -> void:
 	toggled = !toggled
 
 func _exit_tree() -> void:
-	ToggleLbl.queue_free()
+	toggle_lbl.queue_free()

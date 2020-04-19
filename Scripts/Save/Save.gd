@@ -6,14 +6,14 @@ func save():
 	emit_signal("saved")
 
 func _on_Area2D_body_entered(body: Node2D) -> void:
-	if (body.is_in_group("Player")):
-		body.canSave = true
-		body.savePoint = self
+	if (body is Player):
+		body.can_save = true
+		body.save_point = self
 	else:
-		WorldController.saveGame()
+		WorldController.save_game()
 		save()
 
 func _on_Area2D_body_exited(body: Node2D) -> void:
-	if (body.is_in_group("Player")):
-		body.canSave = false
-		body.savePoint = null
+	if (body is Player):
+		body.can_save = false
+		body.save_point = null

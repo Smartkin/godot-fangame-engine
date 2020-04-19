@@ -1,12 +1,11 @@
+class_name WaterBase
 extends Node2D
 
-class_name WaterBase
-
 enum TYPE {
-	Water1,
-	Water2,
-	Water3
+	WATER_1,
+	WATER_2,
+	WATER_3,
 }
 
-export var fallSpeed := 100
-export(TYPE) var type = TYPE.Water2
+export var fall_speed := 100
+export(TYPE) var type = TYPE.WATER_2

@@ -21,7 +21,7 @@ __meta__ = {
 
 [node name="Warp" parent="." instance=ExtResource( 13 )]
 position = Vector2( 112, 496 )
-warpTo = "res://TestBed.tscn"
+warp_to = "res://TestBed.tscn"
 
 [node name="PlayerController" parent="." instance=ExtResource( 2 )]
 position = Vector2( 80, 672 )
@@ -705,15 +705,12 @@ position = Vector2( 304, 480 )
 
 [node name="Platform2" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 512, 336 )
-startSpeed = Vector2( 0, 50 )
 
 [node name="Platform7" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 32, 656 )
-startSpeed = Vector2( 0, 50 )
 
 [node name="Platform5" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 256, 160 )
-startSpeed = Vector2( 100, 0 )
 
 [node name="Platform4" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 656, 32 )
@@ -725,7 +722,6 @@ bounce = false
 
 [node name="Platform3" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 848, 192 )
-startSpeed = Vector2( 800, 350 )
 
 [node name="GravitySwitch" parent="." instance=ExtResource( 10 )]
 position = Vector2( 224, 656 )

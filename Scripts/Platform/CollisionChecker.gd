@@ -1,11 +1,11 @@
 extends KinematicBody2D
 
+signal block_collision(collisions)
+
 const UP := Vector2.DOWN
 
-signal block_collision
-
 var speed := Vector2.ZERO
-var toMove: Node2D = null
+var to_move: Node2D = null
 
 func _physics_process(delta: float) -> void:
 	# Ugh, kind of hacked in but we wanna keep the sync
@@ -16,8 +16,8 @@ func _physics_process(delta: float) -> void:
 	set_sync_to_physics(true)
 	# Also a hack to move parent along with us
 	position -= speed * delta
-	if (toMove != null):
-		toMove.position += speed * delta
+	if (to_move != null):
+		to_move.position += speed * delta
 		position += speed * delta
 	# Array of KinematicCollision2D
 	var collisions := []

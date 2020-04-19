@@ -92,15 +92,15 @@ position = Vector2( 304, 464 )
 
 [node name="Platform2" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 512, 336 )
-startSpeed = Vector2( 0, 50 )
+start_speed = Vector2( 0, 300 )
 
 [node name="Platform7" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 32, 656 )
-startSpeed = Vector2( 0, 50 )
+start_speed = Vector2( 0, 180 )
 
 [node name="Platform5" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 256, 160 )
-startSpeed = Vector2( 100, 0 )
+start_speed = Vector2( 420, 0 )
 
 [node name="Platform4" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 656, 32 )
@@ -108,12 +108,11 @@ bounce = false
 
 [node name="Platform6" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 672, 624 )
-startSpeed = Vector2( -25, 0 )
-bounce = false
+start_speed = Vector2( 240, 0 )
 
 [node name="Platform3" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 848, 192 )
-startSpeed = Vector2( 800, 350 )
+start_speed = Vector2( 600, 720 )
 
 [node name="Waters" type="Node2D" parent="."]
 
@@ -144,7 +143,7 @@ position = Vector2( 144, 672 )
 
 [node name="Warp" parent="." instance=ExtResource( 13 )]
 position = Vector2( 976, 96 )
-warpTo = "res://TestBed2.tscn"
+warp_to = "res://TestBed2.tscn"
 
 [node name="MusicPlayer" parent="." instance=ExtResource( 15 )]
 position = Vector2( 80, 608 )

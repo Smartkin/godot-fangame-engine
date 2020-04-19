@@ -1,16 +1,15 @@
-extends KinematicBody2D
-
 class_name GrabbableBase
+extends KinematicBody2D
 
 enum TYPE {
 	LEFT,
 	RIGHT,
 	FRONT,
-	BACK
+	BACK,
 }
 
 var type: int setget ,getType
-var slideSpeed: int setget ,getSlideSpeed
+var slide_speed: int setget ,getSlideSpeed
 
 func _ready() -> void:
 	set_physics_process(false)
@@ -20,4 +19,4 @@ func getType() -> int:
 	return type
 
 func getSlideSpeed() -> int:
-	return slideSpeed
+	return slide_speed

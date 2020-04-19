@@ -6,4 +6,4 @@ func _ready() -> void:
 	$Sprite.visible = false
 
 func _enter_tree():
-	WorldController.musicToPlay = music
+	WorldController.music_to_play = music

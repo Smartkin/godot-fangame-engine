@@ -1,33 +1,16 @@
 extends Node2D
 
+# Constants
 # Bullet object information
-var bullet := preload("res://Objects/Player/Bullet.tscn")
+const Bullet := preload("res://Objects/Player/Bullet.tscn")
 
-var playerDead := false
-
-# Callback from WorldController when scene is changed and finishes being built
-func sceneBuilt() -> void:
-	if (WorldController.loadingSave):
-		position.x = WorldController.saveData.playerPosX
-		position.y = WorldController.saveData.playerPosY
-	$Camera.current = true
+# Public
+var player_dead := false
 
 func _physics_process(delta: float) -> void:
-	if (!playerDead):
+	if (!player_dead):
 		$Camera.position = $Player.position
 
-# Callback when player dies
-func _on_Player_dead(playerPos: Vector2) -> void:
-	global_position = playerPos
-	$Camera.position = Vector2.ZERO
-	$CameraFollowLayer/UiCentered/GameOver.visible = true
-	$Blood.emitting = true
-	$Blood.global_position = playerPos
-	$BloodTimer.start()
-	$Sounds/Death.play()
-	playerDead = true
-	WorldController.globalData.deaths += 1
-	WorldController.saveToFile() # Save only deaths/time
 
 func _input(event: InputEvent) -> void:
 	var zoomSpeed = Vector2(0.05, 0.05)
@@ -46,12 +29,19 @@ func _input(event: InputEvent) -> void:
 			if ($Camera.zoom.x >= maxZoomOut.x):
 				$Camera.zoom = maxZoomOut
 
+# Callback from WorldController when scene is changed and finishes being built
+func _on_scene_built() -> void:
+	if (WorldController.loading_save):
+		position.x = WorldController.cur_save_data.playerPosX
+		position.y = WorldController.cur_save_data.playerPosY
+	$Camera.current = true
+
 # Callback when player shoots
 func _on_Player_shoot(direction: int) -> void:
 	$Sounds/Shoot.play()
-	var b := bullet.instance() # Create bullet object
+	var b := Bullet.instance() # Create bullet object
 	var xPosOffset := -5 if direction == -1 else 5
-	var yPosOffset := -7 if WorldController.reverseGrav else 7 # Offset it against player's vertical position
+	var yPosOffset := -7 if WorldController.reverse_grav else 7 # Offset it against player's vertical position
 	add_child(b)
 	b.speed = Vector2(1500 * direction, 0)
 	b.position = Vector2($Player.position.x + xPosOffset, $Player.position.y + yPosOffset)
@@ -64,3 +54,16 @@ func _on_Player_sound(soundName: String) -> void:
 # Callback when blood timer times out
 func _on_BloodTimer_timeout():
 	$Blood.emitting = false
+
+# Callback when player dies
+func _on_Player_dead(playerPos: Vector2) -> void:
+	global_position = playerPos
+	$Camera.position = Vector2.ZERO
+	$CameraFollowLayer/UiCentered/GameOver.visible = true
+	$Blood.emitting = true
+	$Blood.global_position = playerPos
+	$BloodTimer.start()
+	$Sounds/Death.play()
+	player_dead = true
+	WorldController.cur_save_data.deaths += 1
+	WorldController.save_to_file() # Save only deaths/time

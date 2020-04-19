@@ -1,18 +1,18 @@
 extends VBoxContainer
 
 func _ready() -> void:
-	var curConf := WorldController.currentConfig
-	$MusicCheckbox.musicValue = curConf.music
-	$MasterVolumeSlider.value = curConf.volume_master
+	var cur_conf := WorldController.cur_config
+	$MusicCheckbox.music_value = cur_conf.music
+	$MasterVolumeSlider.value = cur_conf.volume_master
 	$MasterVolume.text = "Master Volume " + str($MasterVolumeSlider.value * 100) + "%"
-	$MusicVolumeSlider.value = curConf.volume_music
+	$MusicVolumeSlider.value = cur_conf.volume_music
 	$MusicVolume.text = "Music Volume " + str($MusicVolumeSlider.value * 100) + "%"
-	$SfxVolumeSlider.value = curConf.volume_sfx
+	$SfxVolumeSlider.value = cur_conf.volume_sfx
 	$SfxVolume.text = "Sound Effects Volume " + str($SfxVolumeSlider.value * 100) + "%"
-	$FullscreenCheckbox.fullscreen = curConf.fullscreen
-	$BorderlessCheckbox.borderless = curConf.borderless
-	$VsyncCheckbox.vsync = curConf.vsync
-	$ButtonPrompts.selected = curConf.button_prompts
+	$FullscreenCheckbox.fullscreen = cur_conf.fullscreen
+	$BorderlessCheckbox.borderless = cur_conf.borderless
+	$VsyncCheckbox.vsync = cur_conf.vsync
+	$ButtonPrompts.selected = cur_conf.button_prompts
 	if ($FullscreenCheckbox.fullscreen):
 		$BorderlessCheckbox.disabled = true
 	else:
@@ -21,17 +21,17 @@ func _ready() -> void:
 
 
 func _on_MusicCheckbox_pressed() -> void:
-	$MusicCheckbox.musicValue = !$MusicCheckbox.musicValue
-	WorldController.currentConfig.music = $MusicCheckbox.musicValue
-	if ($MusicCheckbox.musicValue):
-		WorldController.playMusic($"../../MusicPlayer".music)
+	$MusicCheckbox.music_value = !$MusicCheckbox.music_value
+	WorldController.cur_config.music = $MusicCheckbox.music_value
+	if ($MusicCheckbox.music_value):
+		WorldController.play_music($"../../MusicPlayer".music)
 	else:
-		WorldController.stopMusic()
+		WorldController.stop_music()
 
 
 func _on_FullscreenCheckbox_pressed() -> void:
 	$FullscreenCheckbox.fullscreen = !$FullscreenCheckbox.fullscreen
-	WorldController.currentConfig.fullscreen = $FullscreenCheckbox.fullscreen
+	WorldController.cur_config.fullscreen = $FullscreenCheckbox.fullscreen
 	if ($FullscreenCheckbox.fullscreen):
 		$BorderlessCheckbox.disabled = true
 	else:
@@ -41,13 +41,13 @@ func _on_FullscreenCheckbox_pressed() -> void:
 
 func _on_BorderlessCheckbox_pressed() -> void:
 	$BorderlessCheckbox.borderless = !$BorderlessCheckbox.borderless
-	WorldController.currentConfig.borderless = $BorderlessCheckbox.borderless
+	WorldController.cur_config.borderless = $BorderlessCheckbox.borderless
 	OS.window_borderless = $BorderlessCheckbox.borderless
 
 
 func _on_VsyncCheckbox_pressed() -> void:
 	$VsyncCheckbox.vsync = !$VsyncCheckbox.vsync
-	WorldController.currentConfig.vsync = $VsyncCheckbox.vsync
+	WorldController.cur_config.vsync = $VsyncCheckbox.vsync
 	OS.vsync_enabled = $VsyncCheckbox.vsync
 
 
@@ -78,20 +78,20 @@ func _on_SfxVolumeSlider_exited() -> void:
 
 func _on_MasterVolumeSlider_value_changed(value: float) -> void:
 	$MasterVolume.text = "Master Volume " + str(value * 100) + "%"
-	WorldController.currentConfig.volume_master = value
-	WorldController.setVolume("Master", value)
+	WorldController.cur_config.volume_master = value
+	Util.set_volume("Master", value)
 
 
 func _on_MusicVolumeSlider_value_changed(value: float) -> void:
 	$MusicVolume.text = "Music Volume " + str(value * 100) + "%"
-	WorldController.currentConfig.volume_music = value
-	WorldController.setVolume("Music", value)
+	WorldController.cur_config.volume_music = value
+	Util.set_volume("Music", value)
 
 
 func _on_SfxVolumeSlider_value_changed(value: float) -> void:
 	$SfxVolume.text = "Sound Effects Volume " + str(value * 100) + "%"
-	WorldController.currentConfig.volume_sfx = value
-	WorldController.setVolume("Sfx", value)
+	WorldController.cur_config.volume_sfx = value
+	Util.set_volume("Sfx", value)
 
 
 func _on_BackKeyboard_pressed() -> void:
@@ -99,4 +99,4 @@ func _on_BackKeyboard_pressed() -> void:
 	get_parent().current_tab = 0
 
 func _on_ButtonPrompts_item_selected(id):
-	WorldController.currentConfig.button_prompts = id
+	WorldController.cur_config.button_prompts = id

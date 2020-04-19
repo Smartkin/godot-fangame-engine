@@ -7,8 +7,8 @@ func onSave():
 func _on_Timer_timeout():
 	$Sprite.frame = 0
 
-func reverseGravity():
+func _reverse_gravity():
 	$Sprite.scale.y = -1
 
-func normalGravity():
+func _normal_gravity():
 	$Sprite.scale.y = 1

@@ -4,12 +4,12 @@ var borderless := false
 
 func _ready() -> void:
 	if (borderless):
-		rightLbl = "ON"
+		right_lbl = "ON"
 	else:
-		rightLbl = "OFF"
+		right_lbl = "OFF"
 
 func _process(delta: float) -> void:
 	if (borderless):
-		rightLbl = "ON"
+		right_lbl = "ON"
 	else:
-		rightLbl = "OFF"
+		right_lbl = "OFF"

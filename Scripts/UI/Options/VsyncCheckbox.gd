@@ -4,12 +4,12 @@ var vsync := false
 
 func _ready() -> void:
 	if (vsync):
-		rightLbl = "ON"
+		right_lbl = "ON"
 	else:
-		rightLbl = "OFF"
+		right_lbl = "OFF"
 
 func _process(delta: float) -> void:
 	if (vsync):
-		rightLbl = "ON"
+		right_lbl = "ON"
 	else:
-		rightLbl = "OFF"
+		right_lbl = "OFF"

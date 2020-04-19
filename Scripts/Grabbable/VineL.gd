@@ -3,4 +3,4 @@ extends GrabbableBase
 func _ready() -> void:
 	._ready()
 	type = TYPE.LEFT
-	slideSpeed = 100
+	slide_speed = 100

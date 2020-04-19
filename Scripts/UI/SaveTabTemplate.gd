@@ -1,11 +1,11 @@
 extends VBoxContainer
 
-signal LoadGamePressed
-signal NewGamePressed
+signal load_game_pressed
+signal new_game_pressed
 
 
 func _on_Load_pressed():
-	emit_signal("LoadGamePressed")
+	emit_signal("load_game_pressed")
 
 func _on_New_pressed():
-	emit_signal("NewGamePressed")
+	emit_signal("new_game_pressed")

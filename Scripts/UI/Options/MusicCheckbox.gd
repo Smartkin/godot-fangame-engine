@@ -1,15 +1,15 @@
 extends StyledButtonCheckbox
 
-var musicValue := true
+var music_value := true
 
 func _ready() -> void:
-	if (musicValue):
-		rightLbl = "ON"
+	if (music_value):
+		right_lbl = "ON"
 	else:
-		rightLbl = "OFF"
+		right_lbl = "OFF"
 
 func _process(delta: float) -> void:
-	if (musicValue):
-		rightLbl = "ON"
+	if (music_value):
+		right_lbl = "ON"
 	else:
-		rightLbl = "OFF"
+		right_lbl = "OFF"
