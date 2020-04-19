@@ -28,6 +28,10 @@ An engine for fangames made in Godot 3.2.1
 
 - Load music recursively from the music folder
 
+> v1.04
+
+- Rewrite all scripts to comply with [GDScript style](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_styleguide.html) as recommended by Godot engine
+
 # Features
 * Adjusted kid's physics, fall speed is lowered, coyote frames added, jump input buffering added (If desidered all can be adjusted to feel closer to original fangame physics)
 * Standard gimmicks (Vines, 3 water types, one-way platforms(not coded in a potato way), gravity flipping and slopes)
@@ -42,7 +46,7 @@ To contribute yourself create a fork of this repository, clone the fork to yours
 If you are making an issue, please make a good description as to what exactly you want to be added and why
 
 # Code style
-When you contribute something by yourself please keep the code style used throughout the engine, that includes using brackets in if statements, not using semicolons(;) at the end of statements, using camelCase for function and variable names, use [static typing](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/static_typing.html) only
+When you contribute something by yourself please keep the code style used throughout the engine. Style used is the style recommended by Godot engine in its [documentation](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_styleguide.html) and also use [static typing](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/static_typing.html) only
 
 # Contact
 * Discord: Smartkin#7777

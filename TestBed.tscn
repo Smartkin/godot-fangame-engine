@@ -92,7 +92,7 @@ position = Vector2( 304, 464 )
 
 [node name="Platform2" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 512, 336 )
-start_speed = Vector2( 0, 300 )
+start_speed = Vector2( 0, 50 )
 
 [node name="Platform7" parent="Platforms" instance=ExtResource( 3 )]
 position = Vector2( 32, 656 )
