@@ -42,9 +42,7 @@ scale = 3.0
 scale_curve = SubResource( 2 )
 color = Color( 1, 0, 0, 1 )
 
-[node name="PlayerController" type="Node2D" groups=[
-"Saved",
-]]
+[node name="PlayerController" type="Node2D" groups=["Saved"]]
 z_index = 120
 script = ExtResource( 7 )
 
@@ -105,6 +103,7 @@ margin_right = 1018.0
 margin_bottom = 439.0
 texture = ExtResource( 6 )
 stretch_mode = 4
+
 [connection signal="dead" from="Player" to="." method="_on_Player_dead"]
 [connection signal="shoot" from="Player" to="." method="_on_Player_shoot"]
 [connection signal="sound" from="Player" to="." method="_on_Player_sound"]

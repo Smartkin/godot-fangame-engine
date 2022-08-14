@@ -86,9 +86,12 @@ var _save_data := {} # Current save data that is loaded upon restart button pres
 var _window_caption: String = ProjectSettings.get_setting("application/config/name") # Game's window caption
 var _prev_win_cap := "" # Game's previously set window caption
 var _music_files := {} # Loaded music files
+var _ui_sfx := {} # Loaded UI sfx
 var _cur_song := "" # Currently played song filename
 var _pause_menu := preload("res://Objects/UI/PauseMenu.tscn") # Pause menu object
+var _transition := preload("res://Objects/Transition.tscn") # Transition object
 var _cur_pause_menu: Node = null # Current pause menu object instance
+var _cur_transition: Node = null # Current transition object instance
 var _scene_tree: SceneTree = null # Game's scene tree
 
 func _ready() -> void:
@@ -108,6 +111,7 @@ func _ready() -> void:
 	_scene_tree.connect("tree_changed", self, "_on_tree_changed") # Tracks when scene finishes building
 	connect("tree_exiting", self, "_on_game_ended") # Connect to game ending signal
 	_load_music() # Load music
+	_load_ui_sfx() # Load UI sfx
 	_load_config() # Load user's configuration
 
 # Any globally handled user input
@@ -148,14 +152,25 @@ func _process(delta):
 		OS.set_window_title(win_cap)
 		_prev_win_cap = win_cap
 
+# Plays a UI sfx
+func play_ui_sfx(fileName: String) -> void:
+	var ui_sfx_node := AudioStreamPlayer.new()
+	ui_sfx_node.name = "UiSfxPlayer"
+	ui_sfx_node.bus = "Sfx"
+	add_child(ui_sfx_node)
+	assert(_ui_sfx[fileName + ".wav.import"] != null)
+	ui_sfx_node.stream = _ui_sfx[fileName + ".wav.import"]
+	ui_sfx_node.play()
+	ui_sfx_node.connect("finished", ui_sfx_node, "queue_free")
+
 # Plays a specified music track
 func play_music(fileName := "") -> void:
 	if (cur_config.music): # Check that music is currently turned on
 		var music_player := $MusicPlayer as AudioStreamPlayer
 		if (_cur_song != fileName && fileName != ""):
 			# Make sure we will play a loaded song
-			assert(_music_files[fileName + ".ogg"] != null)
-			music_player.stream = _music_files[fileName + ".ogg"]
+			assert(_music_files[fileName + ".ogg.import"] != null)
+			music_player.stream = _music_files[fileName + ".ogg.import"]
 			music_player.play()
 			_cur_song = fileName
 		if (fileName == ""): # If no file was specified stop playing music
@@ -221,6 +236,21 @@ func set_save_slot(slot: int) -> void:
 
 func get_loading_save() -> bool:
 	return loading_save
+
+func free_transition() -> void:
+	_cur_transition = null
+
+func do_transition() -> void:
+	if _cur_transition != null:
+		_cur_transition.queue_free()
+		free_transition()
+	_cur_transition = _transition.instance()
+	add_child(_cur_transition)
+
+func do_post_transition() -> void:
+	do_transition()
+	_cur_transition.set_time(1.0)
+	_cur_transition.set_state(_cur_transition.STATE.TO)
 
 # Save player's configuration
 func save_config() -> void:
@@ -325,7 +355,6 @@ func _open_save_file(file: File, slot: int, mode: int):
 	else:
 		file.open_encrypted_with_pass(_get_save_path(slot), mode, SAVE_PASSWORD)
 
-
 # Loads all the music into memory for faster access later on
 func _load_music() -> void:
 	var music_dir := Directory.new()
@@ -338,15 +367,37 @@ func _load_music() -> void:
 func _load_music_recursively(cur_dir: Directory) -> void:
 	var music_file_or_dir := cur_dir.get_next()
 	while (music_file_or_dir != ""):
-		print(cur_dir.get_current_dir() + "/" + music_file_or_dir)
-		if (music_file_or_dir.ends_with(".ogg")):
-			_music_files[music_file_or_dir] = load(cur_dir.get_current_dir() + "/" + music_file_or_dir)
+		if (music_file_or_dir.ends_with(".ogg.import")):
+			var import_file := ConfigFile.new()
+			var er := import_file.load(cur_dir.get_current_dir() + "/" + music_file_or_dir)
+			_music_files[music_file_or_dir] = load(import_file.get_value("remap", "path"))
 		elif (cur_dir.dir_exists(music_file_or_dir)):
 			var newDir = Directory.new()
 			newDir.open(cur_dir.get_current_dir() + "/" + music_file_or_dir)
 			newDir.list_dir_begin(true)
 			_load_music_recursively(newDir)
 		music_file_or_dir = cur_dir.get_next()
+
+func _load_ui_sfx() -> void:
+	var sfx_dir := Directory.new()
+	sfx_dir.open("res://Sounds/UI")
+	sfx_dir.list_dir_begin(true)
+	_load_ui_sfx_recursively(sfx_dir)
+
+
+func _load_ui_sfx_recursively(cur_dir: Directory) -> void:
+	var sfx_file_or_dir := cur_dir.get_next()
+	while (sfx_file_or_dir != ""):
+		if (sfx_file_or_dir.ends_with(".wav.import")):
+			var import_file := ConfigFile.new()
+			var er := import_file.load(cur_dir.get_current_dir() + "/" + sfx_file_or_dir)
+			_ui_sfx[sfx_file_or_dir] = load(import_file.get_value("remap", "path"))
+		elif (cur_dir.dir_exists(sfx_file_or_dir)):
+			var new_dir = Directory.new()
+			new_dir.open(cur_dir.get_current_dir() + "/" + sfx_file_or_dir)
+			new_dir.list_dir_begin(true)
+			_load_ui_sfx_recursively(new_dir)
+		sfx_file_or_dir = cur_dir.get_next()
 
 # Load player's configuration
 func _load_config() -> void:

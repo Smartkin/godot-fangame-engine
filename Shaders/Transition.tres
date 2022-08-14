@@ -1,0 +1,47 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform sampler2D mask;
+uniform vec4 after : hint_color;
+uniform vec4 halo_color : hint_color;
+uniform mediump float t : hint_range(0.0,1.0);
+uniform mediump float ramp : hint_range(0.0,1.0);
+
+vec4 alpha_composite(vec4 top, vec4 bottom) {
+    float alpha = top.a + bottom.a * (1.0 - top.a);
+    return vec4((top.rgb * top.a + bottom.rgb * (bottom.a * (1.0 - top.a))) / alpha, alpha);
+}
+void fragment() {
+    vec4 before_pixel = texture(SCREEN_TEXTURE, SCREEN_UV);
+    vec4 after_pixel = after;
+	vec2 uv = vec2(SCREEN_UV.x, SCREEN_UV.y);
+    vec4 mask_pixel = texture(mask, uv);
+    float discriminator = mask_pixel.r + mask_pixel.g / 256.0 + mask_pixel.b / 65536.0;
+    float scaled_t = t * (1.0 + ramp * 2.0) - ramp;
+    if (halo_color.a == 0.0) {
+        float alpha = clamp((scaled_t - discriminator) / ramp + 0.5, 0.0, 1.0);
+        after_pixel.a *= alpha;
+        COLOR = alpha_composite(after_pixel, before_pixel);
+    }
+    else {
+        // Compute the alpha of the halo such that it's 1.0 when the
+        // discriminator matches exactly, and 0.0 just at the end of the ramp
+        float alpha = clamp(1.0 - abs(scaled_t - discriminator) / ramp, 0.0, 1.0);
+        vec4 halo = vec4(halo_color.rgb, alpha);
+        if (scaled_t < discriminator) {
+            COLOR = alpha_composite(halo, before_pixel);
+        }
+        else {
+            COLOR = alpha_composite(halo, after_pixel);
+        }
+    }
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/after = Plane( 1, 1, 1, 1 )
+shader_param/halo_color = Color( 0, 0.490196, 0, 1 )
+shader_param/t = 0.5
+shader_param/ramp = 0.339
