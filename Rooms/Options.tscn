@@ -531,6 +531,7 @@ text = "Left"
 align = 0
 script = ExtResource( 9 )
 bind = "left"
+controller_bind = true
 
 [node name="Right" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 91.0
@@ -547,6 +548,7 @@ text = "Right"
 align = 0
 script = ExtResource( 9 )
 bind = "right"
+controller_bind = true
 
 [node name="Up" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 139.0
@@ -563,6 +565,7 @@ text = "Up"
 align = 0
 script = ExtResource( 9 )
 bind = "up"
+controller_bind = true
 
 [node name="Down" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 187.0
@@ -579,6 +582,7 @@ text = "Down"
 align = 0
 script = ExtResource( 9 )
 bind = "down"
+controller_bind = true
 
 [node name="Jump" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 235.0
@@ -595,6 +599,7 @@ text = "Jump"
 align = 0
 script = ExtResource( 9 )
 bind = "jump"
+controller_bind = true
 
 [node name="Shoot" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 283.0
@@ -611,6 +616,7 @@ text = "Shoot"
 align = 0
 script = ExtResource( 9 )
 bind = "shoot"
+controller_bind = true
 
 [node name="Restart" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 331.0
@@ -627,6 +633,7 @@ text = "Restart"
 align = 0
 script = ExtResource( 9 )
 bind = "restart"
+controller_bind = true
 
 [node name="Skip" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 379.0
@@ -643,6 +650,7 @@ text = "Skip"
 align = 0
 script = ExtResource( 9 )
 bind = "skip"
+controller_bind = true
 
 [node name="Suicide" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 427.0
@@ -659,6 +667,7 @@ text = "Suicide"
 align = 0
 script = ExtResource( 9 )
 bind = "suicide"
+controller_bind = true
 
 [node name="Pause" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 475.0
@@ -675,6 +684,7 @@ text = "Pause"
 align = 0
 script = ExtResource( 9 )
 bind = "pause"
+controller_bind = true
 
 [node name="ResetControls" type="Button" parent="OptionsTabs/ControllerOptionsTab"]
 margin_top = 523.0

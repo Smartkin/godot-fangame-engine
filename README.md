@@ -49,4 +49,4 @@ If you are making an issue, please make a good description as to what exactly yo
 When you contribute something by yourself please keep the code style used throughout the engine. Style used is the style recommended by Godot engine in its [documentation](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_styleguide.html) and also use [static typing](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/static_typing.html) only
 
 # Contact
-* Discord: Smartkin#7777
+* Discord: Smartkin#7323

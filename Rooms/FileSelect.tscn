@@ -45,4 +45,5 @@ __meta__ = {
 [node name="MusicPlayer" parent="." instance=ExtResource( 5 )]
 position = Vector2( 146.474, 93.7895 )
 music = "GuyRock"
+
 [connection signal="tab_changed" from="SaveSlots" to="." method="_on_SaveSlots_tab_changed"]
