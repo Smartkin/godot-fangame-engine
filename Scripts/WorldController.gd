@@ -93,6 +93,8 @@ var _transition := preload("res://Objects/Transition.tscn") # Transition object
 var _cur_pause_menu: Node = null # Current pause menu object instance
 var _cur_transition: Node = null # Current transition object instance
 var _scene_tree: SceneTree = null # Game's scene tree
+var _is_fade_music := false # Whether we are currently fading the music
+var _fade_val := 1.0 # Current fade out value
 
 func _ready() -> void:
 	print("World created")
@@ -151,6 +153,8 @@ func _process(delta):
 	if (win_cap != _prev_win_cap):
 		OS.set_window_title(win_cap)
 		_prev_win_cap = win_cap
+	if _is_fade_music:
+		_fade_music(delta)
 
 # Plays a UI sfx
 func play_ui_sfx(fileName: String) -> void:
@@ -166,6 +170,8 @@ func play_ui_sfx(fileName: String) -> void:
 # Plays a specified music track
 func play_music(fileName := "") -> void:
 	if (cur_config.music): # Check that music is currently turned on
+		_is_fade_music = false
+		Util.set_volume("Master", cur_config.volume_master)
 		var music_player := $MusicPlayer as AudioStreamPlayer
 		if (_cur_song != fileName && fileName != ""):
 			# Make sure we will play a loaded song
@@ -177,6 +183,23 @@ func play_music(fileName := "") -> void:
 			stop_music()
 		if (music_to_play != ""): # Reset music to play so it stops any music from playing when no music object is provided
 			music_to_play = ""
+
+func pitch_music(pitch: float) -> void:
+	var music_player := $MusicPlayer as AudioStreamPlayer
+	music_player.pitch_scale = pitch
+
+func fade_music() -> void:
+	if not _is_fade_music:
+		_fade_val = 1.0
+	_is_fade_music = true
+
+func _fade_music(delta: float) -> void:
+	if _fade_val > 0:
+		Util.set_volume("Master", _fade_val * cur_config.volume_master)
+		_fade_val -= 1 * delta
+	else:
+		_fade_val = 1
+		_is_fade_music = false
 
 func stop_music() -> void:
 	var music_player := $MusicPlayer as AudioStreamPlayer

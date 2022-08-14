@@ -46,9 +46,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 3 )
 script = ExtResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Center" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -57,9 +54,6 @@ margin_bottom = 6.10352e-05
 rect_rotation = 0.00251688
 size_flags_horizontal = 3
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ChangeControlPopup" type="PopupDialog" parent="Center"]
 margin_left = 390.0
@@ -717,6 +711,7 @@ align = 0
 [node name="MusicPlayer" parent="." instance=ExtResource( 1 )]
 position = Vector2( 11.7368, 10.6315 )
 music = "GuyRock"
+fade = true
 
 [connection signal="control_key_input" from="Center/ChangeControlPopup" to="." method="_on_ChangeControlPopup_control_key_input"]
 [connection signal="pressed" from="OptionsTabs/MainOptionsTab/MusicCheckbox" to="OptionsTabs/MainOptionsTab" method="_on_MusicCheckbox_pressed"]
